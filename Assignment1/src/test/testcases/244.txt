@@ -1,0 +1,35 @@
+
+        Class Program{
+            Val a: Int = 0;
+            Val b: Int = 0;
+            Var c, d: Int;
+
+            main(){
+                Var var1:String = "str1";
+            }
+
+            foo(){
+                a = b%c + Self.foo();
+                Self.foo2(param1, param2);
+                a1 = Self.foo3(param1, param2);
+                Var b: Boolean = 1 >= 3;
+                Val val1: Boolean = True == False;
+                b = ! val1;
+                Return True;
+            }
+        }
+
+        Class Diary{
+            Var $arr: Array[Array[String, 2], 5];
+            Var $numOfDiary: Int = 0;
+            Constructor(){
+                Diary::$numOfDiary = Diary::$numOfDiary + 1;
+            }
+            getNumOfDiary(){
+                Return Motor::$numOfDiary;
+            }
+            addDiary(diary: Array[String, 2]){
+                Diary::$arr[Diary::$numOfDiary] = diary;
+            }
+        }
+        

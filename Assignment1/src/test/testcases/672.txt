@@ -1,0 +1,1 @@
+Class FW:R{Var X:Int ;}Class _D1_:_{}Class _o{}Class _yx{Destructor (){}Destructor (){_::$nX();} }Class X_{}Class __8:X{}

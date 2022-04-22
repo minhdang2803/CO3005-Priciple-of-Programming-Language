@@ -1,0 +1,29 @@
+
+            Class ElectricalDevice{
+                Var weight: Float;
+                Var useBattery: Boolean;
+                Var $numOfDevices: Int;
+                Constructor(){}
+                Constructor(weight: Float; useBat:Boolean){
+                    Self.weight = weight/100;
+                    Self.useBattery = useBat;
+                }
+                Destructor(){}
+
+            }
+            Class Laptop:Electrical{
+                $Refresh(){
+                    Foreach(i In $numOfDevices .. 0 By -1){
+
+                    }
+                }
+                start(){
+                    Laptop::$nothing();
+                    Return useBattery;
+                }
+                stop(){
+                    Self.nothing();
+                    Return -useBattery;
+                }
+            }
+        

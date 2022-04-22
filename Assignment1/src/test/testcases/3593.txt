@@ -1,0 +1,1 @@
+Class H6:_{Constructor (_,_,WH:Array [Boolean ,012];_,__,_0:Array [Int ,0x2C];_R,_E_4,_43:Array [Array [Int ,05_4],0b1_0];z,_:Array [Array [String ,7],0B1111]){} }

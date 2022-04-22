@@ -1,0 +1,1 @@
+Class aU:O{Constructor (N:Array [Boolean ,0X3C]){}Constructor (__,o:Array [Boolean ,0b10_1_0_0]){ {} }Constructor (){}Destructor (){Continue ;}Var $_V,_,$_l,$Q_8S_:Array [Boolean ,4];Var Tr:Int ;}

@@ -1,0 +1,1 @@
+Class _:_{Var _:Array [Boolean ,5];Constructor (){}Val _,_:Boolean ;}Class _{Destructor (){}Val $_:Array [Array [String ,060],060];}

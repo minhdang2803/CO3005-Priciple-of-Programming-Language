@@ -1,0 +1,1 @@
+Class t:r{Var $j,$q,$_:Array [Array [Int ,0b10010],0b10010];Constructor (c,_,t,_:Array [Boolean ,0B101011]){} }Class d{}Class _:FF{}

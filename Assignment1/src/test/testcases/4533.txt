@@ -1,0 +1,1 @@
+Class K2:_{Val _1,$0,c_:Array [Array [Array [Float ,7],60],0x4];Val $1z____:Array [Array [Float ,60],4];Var r,_b,$_:String ;}

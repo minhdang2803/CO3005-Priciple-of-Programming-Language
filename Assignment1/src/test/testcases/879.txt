@@ -1,0 +1,1 @@
+Class d{Var O,$D:Array [Array [String ,0B101],0XA];Destructor (){}Constructor (__,_,_xM0_:String ){}Var ___:RD_;}

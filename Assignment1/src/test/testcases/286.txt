@@ -1,0 +1,41 @@
+
+            Class ElectricalDevice{
+                Var weight: Float;
+                Var useBattery: Boolean;
+                Var $numOfDevices: Int;
+                Var $devices: Array[Float, 100];
+                Constructor(){}
+                Constructor(weight: Float; useBat:Boolean){
+                    Self.weight = weight/100;
+                    Self.useBattery = useBat;
+                }
+                Destructor(){}
+
+            }
+            Class Laptop:Electrical{
+                Var $numOfLaptops: Int;
+                Var $laptops: Array[Boolean, 100];
+
+                Constructor(weight: Float; useBat:Boolean){
+                    Self.weight = weight/100;
+                    Self.useBattery = useBat;
+                    ElectricalDevice::$devices[ElectricalDevice::$numOfDevices] = Self;
+                    Laptop::$laptops[ElectricalDevice::$numOfDevices] = Self;
+                    ElectricalDevice::$numOfDevices = ElectricalDevice::$numOfDevices+1;
+                }
+
+                $Refresh(){
+                    Foreach(i In (ElectricalDevice::$numOfDevices*100)/100 + 1 .. 100-100+35%34 By -1){
+                        laptops[i].refresh();
+                    }
+                }
+                start(){
+                    Laptop::$nothing();
+                    Return useBattery;
+                }
+                stop(){
+                    Self.nothing();
+                    Return -useBattery;
+                }
+            }
+        

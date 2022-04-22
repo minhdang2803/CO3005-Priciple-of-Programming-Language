@@ -1,0 +1,12 @@
+
+            Class ElectricalDevice{
+                Var weight: Float;
+                Var useBattery: Boolean;
+            }
+            Class Laptop:Electrical{
+                start(){
+                    Laptop::$nothing();
+                    Return useBattery;
+                }
+            }
+        

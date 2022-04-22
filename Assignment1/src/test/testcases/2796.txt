@@ -1,0 +1,1 @@
+Class z{Val $r_,k:String ;Destructor (){New _().Fa();} }Class U:b_{Var x_:Int ;}Class _:F{Destructor (){ {} }Var q:Array [Array [Int ,0B1001100],013];Constructor (K:Array [Array [String ,40],0B1001100];_0_,_,_,w,_,j:Array [Boolean ,0XC];_V0:Array [Array [Float ,0B1],40]){} }

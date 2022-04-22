@@ -1,0 +1,1 @@
+Class U:_{}Class _:S{Constructor (){Continue ;} }Class q:Q{Destructor (){}Constructor (K5:Boolean ){} }Class S{}

@@ -1,0 +1,1 @@
+Class tR{Constructor (H:Array [Array [Array [Array [Array [Int ,06],88],062_7],0x3F],0X4A];B:Array [Array [Array [Array [String ,0B1000011],0120],05502],0b1_1];J_7_:Int ;_,AI:Array [Float ,060_2]){Return ;Return ;}Var j:Array [Boolean ,0B1_111_1];}

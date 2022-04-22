@@ -1,0 +1,1 @@
+Class _{Var _:Array [Boolean ,23_3];s__tw(_:Array [Array [Array [Array [Array [Array [Array [Float ,66],66],03],66],66],66],0b1010101];_,_2_6oy,_hT,d_,dO2:Array [String ,04];_,_:Array [Array [Float ,01],8]){} }

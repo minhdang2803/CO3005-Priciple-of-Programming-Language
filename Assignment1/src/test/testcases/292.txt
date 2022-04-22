@@ -1,0 +1,10 @@
+
+            Class Classroom{
+                Var $numOfStudents : Int = 0;
+                Var $studentList: Array[String, 40];
+                addStudent(newStu: Student){
+                     Classroom::$studentList.append(newStu);
+                } 
+            }
+            Class Student{}
+        

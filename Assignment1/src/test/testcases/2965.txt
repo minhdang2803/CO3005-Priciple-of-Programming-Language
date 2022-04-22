@@ -1,0 +1,1 @@
+Class R7:_4o_{Constructor (){}Var p:_;}Class _{Var $KH:Array [Int ,0B1_1];Var $_H:Int ;}Class _:___3{}Class _L_L:_7{}

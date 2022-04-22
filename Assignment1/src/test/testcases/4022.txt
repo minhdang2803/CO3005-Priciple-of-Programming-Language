@@ -1,0 +1,1 @@
+Class nkg{Constructor (_,xS__D_:Array [Array [Array [Array [Float ,04],0B100110],0X44],0b1_00]){}Val $g:Array [Boolean ,9_772_7];}

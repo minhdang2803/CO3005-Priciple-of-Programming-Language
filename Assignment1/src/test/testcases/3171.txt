@@ -1,0 +1,1 @@
+Class _:_{Constructor (){}Destructor (){}Constructor (_:String ;_,_K:Array [Array [Array [Boolean ,0b10_0_0],10],10];A_7:Q){} }

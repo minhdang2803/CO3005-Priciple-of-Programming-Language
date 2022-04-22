@@ -1,0 +1,1 @@
+Class _:_{h(){}Constructor (tm,C:Array [String ,07];_s,_:Boolean ;_:_;V:Array [Int ,07];__:j;F:Float ){}Var $_:_;}

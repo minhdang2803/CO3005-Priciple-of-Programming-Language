@@ -1,0 +1,1 @@
+Class _0:p{}Class _:_{Var _:Int ;}Class _{Constructor (a:Int ;_:Array [Int ,5];G,l_,_,Y8,l,P:Int ){Continue ;Return ;}Destructor (){} }

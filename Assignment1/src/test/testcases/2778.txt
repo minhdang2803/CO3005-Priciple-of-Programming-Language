@@ -1,0 +1,1 @@
+Class o_:_D{Constructor (_,O:fql_;_:Array [Array [Array [Boolean ,30],0x5C],0XA_56];fc,_,K:Array [Int ,1]){}Constructor (){} }

@@ -1,0 +1,1 @@
+Class _:Jfo_{Var $_4HY:Array [Array [Array [Boolean ,0b10],0B110_1],0B1001];Val $a6:Array [Array [Boolean ,0x4A],0B1001];}

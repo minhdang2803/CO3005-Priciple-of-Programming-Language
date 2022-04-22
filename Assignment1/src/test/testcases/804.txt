@@ -1,0 +1,1 @@
+Class C{Var H:Array [Array [Array [Array [Array [Array [Array [Float ,0b11],57],022],0b10110],03],0xE],0B1_1_0_1_1];}

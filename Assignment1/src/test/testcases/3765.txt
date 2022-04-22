@@ -1,0 +1,1 @@
+Class C{Constructor (____:Array [Int ,4];_,B692,q4py,_,_,_78:Array [String ,0103]){} }Class _:c{Var $N,S7:Array [Float ,60];Val $8:Boolean ;Val O_z:Array [Int ,60];}

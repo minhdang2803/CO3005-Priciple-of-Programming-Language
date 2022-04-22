@@ -1,0 +1,1 @@
+Class k{Var $3:x;Constructor (_6,G:Boolean ;_4_,_,_:Z4;d_S:Int ;_,_,__,S_c:z;D:Array [Array [Array [Array [String ,3],0b1_1_111],05_6],0B101110]){}Val $9___,_:Array [Int ,0B1];}Class _1{}

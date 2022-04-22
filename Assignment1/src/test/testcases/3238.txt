@@ -1,0 +1,1 @@
+Class bN:_{_(_:Array [Array [Int ,0b11],0b1];C:Array [Array [Int ,0xD],0b11_01];D,_e7,_y:Array [Array [Array [Array [Boolean ,3],0x28],0b110101],178]){} }

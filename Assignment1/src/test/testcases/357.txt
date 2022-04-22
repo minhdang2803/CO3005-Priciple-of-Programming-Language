@@ -1,0 +1,1 @@
+Class G5{Var $5,E,$5:Float ;Destructor (){}Var P:Array [Array [Array [Array [Array [Array [Array [Int ,9_8_3],82],8_0],0x5],0101],0B1110],0B1];}

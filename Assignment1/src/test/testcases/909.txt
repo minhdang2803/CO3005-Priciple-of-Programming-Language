@@ -1,0 +1,1 @@
+Class ___:_b{Constructor (D_:Array [Array [Array [String ,0130],80],80]){}Var $Q,$v__2D,$L,$3I,_,q,$_1,_K12:Int ;}

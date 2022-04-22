@@ -1,0 +1,25 @@
+
+        Class Diary{
+            Var $arr: Array[Array[String, 2], 5];
+            Var $numOfDiary: Int = 0;
+            Var id:Int = 0;
+            Var a,b: Int = 1;
+            Constructor(){
+                Diary::$numOfDiary = Diary::$numOfDiary + 1;
+            }
+            Destructor(){
+                Foreach (i In Motor::$numOfDiary .. 1 By -1){
+                    Motor::$arr[Self.id] = Null;
+                }
+            }
+            getNumOfDiary(){
+                Return Motor::$numOfDiary;
+            }
+            addDiary(diary: Array[String, 2]){
+                Diary::$arr[Self.getNumOfDiary()] = diary;
+            }
+            deleteDiary(id: Int){
+                Diary::$arr[id] = Null;
+            }
+        }
+        

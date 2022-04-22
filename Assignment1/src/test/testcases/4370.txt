@@ -1,0 +1,1 @@
+Class Ay_e:QS5{Constructor (){Val _,Guk6:String ;} }Class e{Destructor (){}$_(_,_,_h,w,_:Array [String ,1_8]){} }

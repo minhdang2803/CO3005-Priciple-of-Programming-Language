@@ -1,0 +1,1 @@
+Class Nf:y{Val $D:Array [Array [Array [Float ,0B1],94],0XF_2];Var _y_5,$_:_g3;Constructor (K4Tw:Array [Array [Float ,94],0B100110]){} }

@@ -1,0 +1,1 @@
+Class Q:a1{Constructor (_,N0,_:Array [Array [Boolean ,50],0B10];_:Array [String ,50]){} }Class F:_{Val $_P,$k6,$fB:Float ;}

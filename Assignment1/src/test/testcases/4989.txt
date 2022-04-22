@@ -1,0 +1,1 @@
+Class H6{}Class ok{Constructor (){_::$6o__();Break ;}Destructor (){}Var $dh_,$u,$t,$s:Array [Array [Array [Int ,5],2],0X38];Y(_G,i0_,_t:W_){} }Class _{}

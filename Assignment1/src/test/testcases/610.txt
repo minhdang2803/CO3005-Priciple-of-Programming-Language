@@ -1,0 +1,1 @@
+Class _jf{Val _,$_:Array [Array [Int ,0b1_0],26];Val _:Array [Array [Array [Array [Array [Array [Float ,0x10],01],0b1_0],0X4],0xE6_E6],0b1010010];}

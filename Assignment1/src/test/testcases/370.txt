@@ -1,0 +1,1 @@
+Class k{Var S0_,$_:_;Var $s,_n_9:Array [Boolean ,0B1];Constructor (U8,_,u:String ;Q_:_){}Destructor (){}D(k_e8:Boolean ){}Destructor (){} }

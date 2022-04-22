@@ -1,0 +1,1 @@
+Class A:_{}Class __:_x{Constructor (K:Boolean ;_,_:Float ;_:Array [Array [Array [Array [Array [Array [String ,0B11],07_4],0X5],0X6],0b1_0],0xF];_:_;_,t,w:Array [Array [Array [Int ,85],032],1_6_4]){} }

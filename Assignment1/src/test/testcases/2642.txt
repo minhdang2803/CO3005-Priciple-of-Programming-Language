@@ -1,0 +1,1 @@
+Class hu{Var $_G,$_:Array [Array [Array [Int ,0b1],0X7],0x42];Var qO:Array [Array [Array [Array [Int ,54],0X4],04_05],0B11];}

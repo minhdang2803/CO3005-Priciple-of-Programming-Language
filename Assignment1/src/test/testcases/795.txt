@@ -1,0 +1,1 @@
+Class N{Var __sp,$_,T,_1_,_:String ;Destructor (){}Constructor (__:Array [String ,8_29];t:_){} }Class _O:_{Val $5,$__:Float ;}

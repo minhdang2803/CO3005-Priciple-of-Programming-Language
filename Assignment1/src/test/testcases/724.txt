@@ -1,0 +1,1 @@
+Class ty{__(){} }Class a:o_{Constructor (_,_:Array [Array [Array [Array [Array [Array [Boolean ,0XC],0554],04],7],0x23],0X8A_1];_,_,KC:_){} }

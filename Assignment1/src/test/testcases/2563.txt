@@ -1,0 +1,1 @@
+Class m_{Var Cdx,KP:Int ;Var W,_,ti:Array [Array [Boolean ,015],05_7_54];Constructor (uP,_h,_:Array [Boolean ,0B1001100]){} }

@@ -1,0 +1,20 @@
+
+            Class ElectricalDevice{
+                Var weight: Float;
+                Var useBattery: Boolean;
+                Constructor(){}
+                Constructor(weight: Float, useBat:Boolean){
+
+                }
+            }
+            Class Laptop:Electrical{
+                start(){
+                    Laptop::$nothing();
+                    Return useBattery;
+                }
+                stop(){
+                    Self.nothing();
+                    Return -useBattery;
+                }
+            }
+        

@@ -1,0 +1,1 @@
+Class Ax{Constructor (s2H,A:Boolean ;f_:Array [String ,016];_:Array [Float ,5]){}Destructor (){Break ;Q::$r();} }

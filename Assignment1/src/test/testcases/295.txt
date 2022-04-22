@@ -1,0 +1,17 @@
+
+            Class Classroom{
+                Var $numOfStudents : Int = 0;
+                Var $studentList: Array[String, 40];
+                addStudent(newStu: Student){
+                     Classroom::$studentList.append(newStu);
+                } 
+            }
+            Class Student{
+                Constructor(){
+                    Classroom::$numOfStudents = Classroom::$numOfStudents + 1;
+                }
+                Destructor(){
+                    Classroom::$numOfStudents = Classroom::$numOfStudents - 1;
+                }
+            }
+        

@@ -1,0 +1,1 @@
+Class BEY{}Class __G:o{Constructor (){Continue ;}Destructor (){} }Class _{}Class T_{}Class _{Destructor (){Break ;} }

@@ -1,0 +1,1 @@
+Class _5:C2_{}Class _{}Class _:__5{Constructor (){Break ;Var J,_:Int ;}Destructor (){}Destructor (){Return ;}Constructor (P,n,X:S5){} }

@@ -1,0 +1,1 @@
+Class G:w_{Var $_:Array [Array [Array [Array [Int ,8],0XD_6],55],0B111_11_0];}Class N:_{}Class _{Var _,C,$_:Array [Int ,0x19];}

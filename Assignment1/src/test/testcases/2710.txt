@@ -1,0 +1,1 @@
+Class P{Val $1,$_5,_j:String ;Destructor (){} }Class tN:_{}Class N{Constructor (){Var _,__:Boolean ;} }Class a__:_{}

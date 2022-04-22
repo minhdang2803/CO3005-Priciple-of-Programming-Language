@@ -1,0 +1,1 @@
+Class __{Constructor (_:g;i0__8:Float ;f,__,_8:Array [Array [Float ,0b1],0b111100];_,E,X82:Array [Array [Float ,0b111100],0b111100]){} }

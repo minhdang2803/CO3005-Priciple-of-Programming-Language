@@ -1,0 +1,1 @@
+Class _{Val _:Boolean ;Destructor (){}Val $_:h;Var $_z9A,$__:Array [Float ,01];}Class O:S{}Class __:_q{Constructor (__,C:_){Continue ;Return ;} }

@@ -1,0 +1,1 @@
+Class _{Destructor (){Break ;} }Class v:o{}Class G{}Class _:_{Constructor (_,_V,O0:Array [Array [String ,1],1];_:Array [Array [Array [String ,06_7],0b10000],0b10000];V0:String ;O0:_;__:Array [Array [Int ,0X3E],0b10]){}Constructor (){} }

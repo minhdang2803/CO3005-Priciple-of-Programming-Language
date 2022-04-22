@@ -1,0 +1,1 @@
+Class h{}Class p{Constructor (_:Array [Array [Array [Array [Array [Array [Array [Array [Boolean ,0141],04],0B1011011],0b10_01],6],0X2E],0x43],87];_p,_:_;_p,j:Array [Int ,0141];__:_){Break ;} }

@@ -1,0 +1,9 @@
+Class Program{
+                Val a: Int = 0;
+                Val b: Int = 0;
+                Var c, d: Int;
+                main(){
+                    Var $var1:String = "str1";
+                }
+                foo(){}
+        }

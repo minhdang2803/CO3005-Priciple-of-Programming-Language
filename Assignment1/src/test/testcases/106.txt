@@ -1,0 +1,1 @@
+Class e{Var $0:Boolean ;Val $_2,ft,$_P7F_:Array [Array [Array [Float ,0B101010],79],0X1D];Constructor (){} }Class f:C{}Class _{}

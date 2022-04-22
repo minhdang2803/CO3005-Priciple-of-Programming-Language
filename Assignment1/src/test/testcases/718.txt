@@ -1,0 +1,1 @@
+Class H{Var zC:Array [Array [Int ,0b1_00],0x48];Destructor (){Continue ;}Var _:Array [Array [String ,0B1],0B111011];}Class I:_{}
