@@ -1,0 +1,5 @@
+Class Program {
+            $a() {
+                a.f().a[1][23] = a.foo() +. AClass::$foo();
+            }
+        }

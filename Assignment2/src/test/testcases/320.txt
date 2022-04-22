@@ -1,0 +1,7 @@
+
+        Class C{
+            foo(){
+                Return 1+2;
+            }
+        }
+        

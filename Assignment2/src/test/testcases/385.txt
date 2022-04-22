@@ -1,0 +1,7 @@
+Class Program {
+            a() {
+                Val a : ClassAC = Null;
+                a = New X(1 + 1, a - 3 * b, 10 / 7 + d);
+                Self.print(a.a);
+            }
+        }

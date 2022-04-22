@@ -1,0 +1,6 @@
+Class Person{
+        __init__(name:String; age: Int){
+            Self.name = name;
+            Self.age = age;
+        }
+        myfunc(){func.printLn("Hello my name is " +. Self.name);}}

@@ -1,0 +1,7 @@
+
+        Class Program {
+            main(){
+                Return New A(New B(New C()), 1+2, C::$x);
+            }
+        }
+        

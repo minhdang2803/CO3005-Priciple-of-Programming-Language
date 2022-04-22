@@ -1,0 +1,7 @@
+Class Program {
+            a() {
+                Foreach (a In b + c .. b - c * 100) {
+                    Self.print(a);
+                }
+            }
+        }

@@ -1,0 +1,5 @@
+Class Pet {
+            Var $1cat:Pet;
+            main(){
+                Val dog:Pet = New Pet("Tin",1,Null);
+            }}

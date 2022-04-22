@@ -1,0 +1,1 @@
+Program([ClassDecl(Id(myDog),Id(Pet),[MethodDecl(Id(main),Instance,[],Block([AssignStmt(Id(miles),NewExpr(Id(Dog),[StringLit(Miles),IntLit(4),StringLit(Bulldog)])),Call(Id(buddy),Id(updateAge),[]),Call(Id(buddy),Id(speak),[ArrayCell(Id(DogSound),[BinaryOp(-,IntLit(1),BinaryOp(*,BinaryOp(*,UnaryOp(-,IntLit(1)),IntLit(2)),UnaryOp(-,IntLit(2))))])])]))])])

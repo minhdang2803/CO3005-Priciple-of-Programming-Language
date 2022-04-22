@@ -1,0 +1,1 @@
+Program([ClassDecl(Id(Square),[AttributeDecl(Instance,ConstDecl(Id(dots),ArrayType(4,FloatType),None)),AttributeDecl(Static,VarDecl(Id($dots),ArrayType(4,FloatType),[FloatLit(1.2),FloatLit(3.4),FloatLit(5.6),FloatLit(7.8)]))])])

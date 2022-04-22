@@ -1,0 +1,6 @@
+Class myDog:Pet{
+        main(){
+            miles = New Dog("Miles", 4, "Bulldog");
+            buddy.updateAge();
+            buddy.speak(DogSound[1--1*2*-2]);
+        }}

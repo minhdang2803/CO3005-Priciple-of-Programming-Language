@@ -1,0 +1,9 @@
+
+        Class Shape {
+            loop(){
+                Foreach (i In 1 .. 100) {
+                    age = 1;
+                }
+            }
+        }
+        

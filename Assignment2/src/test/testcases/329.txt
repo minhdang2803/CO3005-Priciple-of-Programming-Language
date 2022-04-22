@@ -1,0 +1,15 @@
+
+       Class A:B{
+           Foo(){
+                Var a : Int = 12;
+                If(a > 10){ Return a + 2; }
+                If(a == 10){ Return a + 1; }
+                Else{ Return a + 3; }
+
+                Var b : Int = 13;
+                If(b < 10){ b = 10; Return b;}
+                Elseif(b == 10){ Return b; }
+                Else{Return b + 2; }
+           }
+       }
+       

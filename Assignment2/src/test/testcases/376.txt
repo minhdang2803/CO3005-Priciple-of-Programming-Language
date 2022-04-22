@@ -1,0 +1,5 @@
+Class Program {
+            ##Thiss is a one-line comment in this program##
+            Val coding, $mcoding:MyCode=New Code(), New Code(Self);
+            decode(){coding::$func.funcList.decode(arrCode[1--12.2e-2][0x18A][0B1101]);}
+        }

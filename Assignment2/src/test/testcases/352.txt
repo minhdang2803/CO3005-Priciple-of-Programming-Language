@@ -1,0 +1,10 @@
+
+        Class Dog : Animal {
+            Val name, $color, $nickname : String = "Mimi", "Brown", "Davis";
+            Var $age, leg : Int = 5, 4;
+            Val height : Float = 12.5;
+            Var isGerman : Boolean = True;
+            Var friend, $parent : Dog;
+            Var boyFriend, GirlFirend : Human = New Human(), New Human();
+        }
+        

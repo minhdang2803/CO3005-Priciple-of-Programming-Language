@@ -1,0 +1,5 @@
+
+        Class C{
+            foo(x : Float){}
+        }
+        

@@ -1,0 +1,7 @@
+
+        Class List:Iterable{
+            foo(){
+                Var a: Array[Int, 1] = Array(2_34.456e+7990);
+            }
+        }
+        

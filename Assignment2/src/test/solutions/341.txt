@@ -1,0 +1,1 @@
+Program([ClassDecl(Id(Shape),[MethodDecl(Id(loop),Instance,[],Block([VarDecl(Id(age),IntType,IntLit(1)),For(Id(i),IntLit(1),IntLit(100),IntLit(120),Block([AssignStmt(Id(age),BinaryOp(+,Id(age),IntLit(1))),If(BinaryOp(>,Id(age),IntLit(10)),Block([Return(BooleanLit(False))]))])])]))])])

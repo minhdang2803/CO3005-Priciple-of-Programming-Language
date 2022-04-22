@@ -1,0 +1,7 @@
+
+        Class Program {
+            main(){
+                a = Dog.bark() + Cat::$Meow() + Dog.name + Cat::$age + Animal.Dog[1] + Animal.type().name;
+            }
+        }
+        

@@ -1,0 +1,30 @@
+Class NodeClass {
+               Var data : Int;
+               Val next : NodeClass;
+               Constructor(d : Int){data = d;next = Null;}
+            ## Function to reverse the linked list ##
+            reverse(nodePoint : NodeClass) {
+                Var prev : NodeClass = Null;
+                Val current : NodeClass = nodePoint;
+                Val next : NodeClass = Null;
+                Foreach (i In 1 .. forever By 1) {
+                    If (current == Null) {Break;} 
+                    Else {
+                        next = current.next;
+                        current.next = prev;
+                        prev = current;
+                        current = next;
+                    }}
+                nodePoint = prev; Return nodePoint;
+            }
+        }
+        ##Class Program {
+             mainFunc() {
+                 Val sll : LinkedList = New LinkedList();
+                 sll.head = New NodeClass(26);
+                 sll.head.next = New NodeClass(11);
+                 sll.head.next.next = New NodeClass(3);
+                 head = list.reverse(head);
+                 System.out.println("Reversed linked list "); sll.printList(head);
+             }
+        }##

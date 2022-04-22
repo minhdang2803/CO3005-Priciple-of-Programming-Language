@@ -1,0 +1,9 @@
+
+        Class IntLit {
+            Val a : Int = 1_234_567;
+            Val b : Int = 1_2_3_4_5_6_7;
+            Val c : Int = 0b110;
+            Val d : Int = 0123456;
+            Val e : Int = 0x123456789ABCDEF;
+        }
+        

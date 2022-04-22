@@ -1,0 +1,1 @@
+Program([ClassDecl(Id(Dress),[MethodDecl(Id(Collection),Instance,[],Block([AssignStmt(FieldAccess(FieldAccess(Id(item),Id($2021)),Id(amount)),IntLit(500))]))])])

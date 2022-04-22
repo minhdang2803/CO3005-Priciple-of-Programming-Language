@@ -1,0 +1,5 @@
+Class numberTest {
+            Val $1Int: Int = Self.numCall(0xBED26);
+            Var flNumb: Float = Self.numCall(.e-15);
+            Var flNumb2: Float = .2e-5;
+           }

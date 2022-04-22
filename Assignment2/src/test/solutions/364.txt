@@ -1,0 +1,1 @@
+Program([ClassDecl(Id(Pet),[AttributeDecl(Static,VarDecl(Id($1cat),ClassType(Id(Pet)),NullLiteral())),MethodDecl(Id(main),Instance,[],Block([ConstDecl(Id(dog),ClassType(Id(Pet)),NewExpr(Id(Pet),[StringLit(Tin),IntLit(1),NullLiteral()]))]))])])

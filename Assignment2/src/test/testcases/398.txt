@@ -1,0 +1,7 @@
+Class Shape {
+        foo(){
+            a=New A().B();
+        }
+        calculateDiv(a, b: Int) {
+            If(a>b) {Return a/b;} Else {Return a+b;}
+        }}

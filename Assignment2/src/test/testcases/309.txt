@@ -1,0 +1,6 @@
+
+        Class A{
+            Val y : String;
+            Var $x : Int;
+        }
+        

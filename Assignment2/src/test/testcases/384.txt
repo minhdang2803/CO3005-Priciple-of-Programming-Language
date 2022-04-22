@@ -1,0 +1,7 @@
+Class Program {
+            a() {
+                Val a : Int;
+                a = 1 + 1 + a - 3 * b / 7 + d;
+                Self.print(a);
+            }
+        }

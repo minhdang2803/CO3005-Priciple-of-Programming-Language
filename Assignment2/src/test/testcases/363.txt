@@ -1,0 +1,5 @@
+Class Dress{
+           Collection(){
+               item::$2021.amount=500;
+           }
+       }

@@ -1,0 +1,17 @@
+
+        Class Student{
+                learn(){
+                    Self.print("Learning");   
+                }
+                goToSchool(){
+                    Self.byeMom();
+                    Self.byeDad("by dad");    
+                }
+                Constructor(){
+                    Classroom::$numOfStudents = Classroom::$numOfStudents + 1;
+                }
+                Destructor(){
+                    Classroom::$numOfStudents = Classroom::$numOfStudents - 1;
+                }
+            }
+        

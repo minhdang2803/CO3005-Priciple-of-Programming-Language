@@ -1,0 +1,8 @@
+Class Program {
+            $a() {
+                MotorBike::$eng = Array(1, 2+a, a * b);
+                a[1][(i - j)][3] = c[i][k] + b[1][(j+1)][(k - 2)][3];
+
+                Self.print(a.a);
+            }
+        }

@@ -1,0 +1,7 @@
+Class Program {
+            a() {
+                Foreach (a In New X(1, 2, 3) .. Self.foo().a.bar() By MotherBoard::$capacitor.foo()) {
+                    Self.print(a);
+                }
+            }
+        }

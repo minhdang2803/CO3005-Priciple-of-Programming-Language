@@ -1,0 +1,6 @@
+Class Room {
+        Val People: Array[String, 11];
+        $askEachPerson () {
+            Foreach (i In 10 .. Self.countNumb(ctx.Numb) By ------1*2+3----4) {
+                Self.ask(People[i]);}
+            }}

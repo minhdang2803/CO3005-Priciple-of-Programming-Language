@@ -1,0 +1,1 @@
+Program([ClassDecl(Id(ArrayLit),[AttributeDecl(Instance,VarDecl(Id(a),ArrayType(3,IntType),[BinaryOp(+,IntLit(1),IntLit(2)),IntLit(345),BinaryOp(*,IntLit(6),IntLit(8))]))])])

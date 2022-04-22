@@ -1,0 +1,1 @@
+Program([ClassDecl(Id(List),Id(Iterable),[MethodDecl(Id(foo),Instance,[],Block([VarDecl(Id(a),ArrayType(1,IntType),[FloatLit(inf)])]))])])

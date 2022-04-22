@@ -1,0 +1,1 @@
+Program([ClassDecl(Id(Dad),Id(GrandDad),[]),ClassDecl(Id(Son),Id(Dad),[])])

@@ -1,0 +1,9 @@
+Class Dog{
+        Val tricks: Array[String, 10] = Array();   
+        add_trick(trick:String){
+            Self.tricks.append(trick);
+        }
+
+        main(){
+            Ben = New Dog("Ben");
+            Ben.add_trick("Play dead");} }

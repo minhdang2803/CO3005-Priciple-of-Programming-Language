@@ -1,0 +1,5 @@
+Class Something {
+            foo() {
+                Val a: String = "Hello \n Goodbye";
+                b = 0b1101 * 0x123AFB - 0123665 * (00 - 0x0);
+            }}

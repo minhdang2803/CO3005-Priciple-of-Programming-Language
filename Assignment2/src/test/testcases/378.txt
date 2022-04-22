@@ -1,0 +1,8 @@
+Class myDog:Pet{
+        ##This is multi-line
+        comment in \n program##
+        main(){
+            miles = New Dog("Miles", 4, "Bulldog"); ##Create new dog##
+            buddy.updateAge(); ##Increase dog's age##
+            buddy.speak(DogSound[1--1*2*-2]);
+        }}

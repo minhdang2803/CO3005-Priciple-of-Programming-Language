@@ -1,0 +1,1 @@
+Program([ClassDecl(Id(Shape),[MethodDecl(Id(foo),Instance,[],Block([AssignStmt(Id(a),CallExpr(NewExpr(Id(A),[]),Id(B),[]))])),MethodDecl(Id(calculateDiv),Instance,[param(Id(a),IntType),param(Id(b),IntType)],Block([If(BinaryOp(>,Id(a),Id(b)),Block([Return(BinaryOp(/,Id(a),Id(b)))]),Block([Return(BinaryOp(+,Id(a),Id(b)))]))]))])])

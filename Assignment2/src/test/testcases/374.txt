@@ -1,0 +1,6 @@
+Class Addition{
+         Calculate(arrNumb:Array[Int, 5]){
+            Foreach(i In 0 .. Self.len(arrNum)){
+                If ((arrNumb[i] >= 0) && (arrNumb[i] <= 101)){Self.answer = Self.answer + arrNumb[i];}
+                Else {Continue;}
+            }}}

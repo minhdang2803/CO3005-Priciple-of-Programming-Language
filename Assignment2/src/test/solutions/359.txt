@@ -1,0 +1,1 @@
+Program([ClassDecl(Id(Program),[MethodDecl(Id(main),Static,[],Block([Return(NewExpr(Id(A),[NewExpr(Id(B),[NewExpr(Id(C),[])]),BinaryOp(+,IntLit(1),IntLit(2)),FieldAccess(Id(C),Id($x))]))]))])])

@@ -1,0 +1,5 @@
+
+        Class A{
+            Val a :Int = 1;
+        }
+        

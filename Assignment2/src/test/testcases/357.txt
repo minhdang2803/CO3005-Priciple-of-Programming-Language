@@ -1,0 +1,11 @@
+
+        Class ABC {
+            Var w, h : Int;
+
+            Constructor(w: Int; h: Int) {
+                Self.w = w;
+                Self.h = h;
+                Return;
+            }
+        }
+        

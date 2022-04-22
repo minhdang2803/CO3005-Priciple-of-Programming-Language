@@ -1,0 +1,6 @@
+
+         Class A{
+            Var array : Array[Int,2];
+            Var brray : Array[Int,2] = Array(1,2);
+        }
+        

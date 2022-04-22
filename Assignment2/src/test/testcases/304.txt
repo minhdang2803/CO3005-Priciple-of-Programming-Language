@@ -1,0 +1,4 @@
+
+        Class Dad:GrandDad {}
+        Class Son:Dad {}
+        

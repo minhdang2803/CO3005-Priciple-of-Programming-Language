@@ -1,0 +1,11 @@
+
+        Class Dog {
+            Val a : Int = 1;
+            Val b : Float = 1.4;
+            Val c : String = "abc";
+            Val d : Boolean = True;
+            Val e : Array[Int, 5] = Array(1, 5, 7, 12, 8);
+            Val f : Animal = New Animal();
+            Val g : Array[Array[Int, 5], 2] = Array(Array(1,2,3,4,5), Array(1,2,3,4,5));
+        }
+        
