@@ -1,0 +1,7 @@
+Class a{
+                           b(){
+                               Var c:Int = 2;
+                               Val b:Int = c;
+                               a=b;
+                           }
+                           }
