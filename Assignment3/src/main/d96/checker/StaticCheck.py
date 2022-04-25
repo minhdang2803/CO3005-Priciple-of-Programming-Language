@@ -202,6 +202,8 @@ class StaticChecker(BaseVisitor, Utils):
         name = ast.variable.name
         typ = self.visit(ast.varType, c)
         data = self.visit(ast.varInit, c) if ast.varInit is not None else None
+        if data is not None and type(data[0]) is not type(typ[0]):
+            raise TypeMismatchInConstant(ast)
         if c[0].addVarOrConst(name, typ[0], data, kind='Instance'):
             node = c[0].searchId(name, c[0].current)
             return node, 'mutable'
@@ -300,7 +302,7 @@ class StaticChecker(BaseVisitor, Utils):
         node = c[0].searchClass(ast.classname.name)
         if node is None:
             raise Undeclared(Class(), ast.classname.name)
-        return node.name, None
+        return node, None
 
     def visitVoidType(self, ast, c):
         return VoidType(), None
