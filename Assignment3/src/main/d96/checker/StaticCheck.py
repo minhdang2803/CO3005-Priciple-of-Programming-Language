@@ -162,13 +162,13 @@ class StaticChecker(BaseVisitor, Utils):
         name = typ = data = kind = None
         if type(ast.decl) is VarDecl:
             name = ast.decl.variable.name
-            typ = ast.decl.varType
-            data = ast.decl.varInit
+            typ = self.visit(ast.decl.varType, c)
+            data = self.visit(ast.decl.varInit, c)[0] if ast.decl.varInit is not None else None
             kind = 'mutable'
         if type(ast.decl) is ConstDecl:
             name = ast.decl.constant.name
             typ = self.visit(ast.decl.constType, c)
-            data = self.visit(ast.decl.value, c)
+            data = self.visit(ast.decl.value, c)[0] if ast.decl.value is not None else None
             kind = 'immutable'
         if c.addAttribute(name, typ, data, kind):
             return
@@ -176,7 +176,7 @@ class StaticChecker(BaseVisitor, Utils):
             raise Redeclared(Attribute(), name)
 
     def visitMethodDecl(self, ast, c):
-        kind = ast.kind
+        kind = 'Instance' if type(ast.kind) is Instance else 'Static'
         name = ast.name.name
         if c.addMethod(name, kind):
             for element in ast.param:
@@ -202,8 +202,7 @@ class StaticChecker(BaseVisitor, Utils):
         name = ast.variable.name
         typ = self.visit(ast.varType, c)
         data = self.visit(ast.varInit, c) if ast.varInit is not None else None
-        if data is not None and type(data[0]) is not type(typ[0]):
-            raise TypeMismatchInConstant(ast)
+
         if c[0].addVarOrConst(name, typ[0], data, kind='Instance'):
             node = c[0].searchId(name, c[0].current)
             return node, 'mutable'
@@ -236,7 +235,7 @@ class StaticChecker(BaseVisitor, Utils):
         lhs = self.visit(ast.lhs, c)
         exp = self.visit(ast.exp, c)
         if type(ast.lhs) is Id:
-            if lhs[1] == 'mutable': raise CannotAssignToConstant(ast)
+            if lhs[1] == 'immutable': raise CannotAssignToConstant(ast)
         return
 
 
@@ -302,7 +301,7 @@ class StaticChecker(BaseVisitor, Utils):
         node = c[0].searchClass(ast.classname.name)
         if node is None:
             raise Undeclared(Class(), ast.classname.name)
-        return node, None
+        return node.name, None
 
     def visitVoidType(self, ast, c):
         return VoidType(), None

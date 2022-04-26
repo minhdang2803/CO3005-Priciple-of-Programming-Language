@@ -192,14 +192,26 @@
 #                     }"""
 #         expect = "Undeclared Method: d"
 #         self.assertTrue(TestChecker.test(input, expect, 414))
-
+#
+#     def test_415(self):
+#         """Simple program: int main() {} """
+#         input = """
+#                     Class B{
+#                         Var b:Int = 1;
+#                         c(){}
+#                     }
+#                     Class A{
+#                     b(){
+#                         Var b:Int = 1;
+#                         Var c:D;
+#                     }
+#                     }"""
+#         expect = "Undeclared Class: D"
+#         self.assertTrue(TestChecker.test(input, expect, 415))
 
 
 import unittest
-
 from TestUtils import TestChecker
-
-
 class CheckerSuite(unittest.TestCase):
         def test_400(self):
             """Simple program: int main() {} """
@@ -368,3 +380,14 @@ class CheckerSuite(unittest.TestCase):
                            }"""
             expect = "Illegal Constant Expression: CallExpr(Id(a),Id(c),[])"
             self.assertTrue(TestChecker.test(input, expect, 414))
+
+        def test_415(self):
+            """ Cannot Assign To Constant"""
+            input = """Class a{
+                           b(){
+                               Val c:Int = 2;
+                               c=2; ## Error here ##
+                           }
+                           }"""
+            expect = "Cannot Assign To Constant: AssignStmt(Id(c),IntLit(2))"
+            self.assertTrue(TestChecker.test(input, expect, 415))
