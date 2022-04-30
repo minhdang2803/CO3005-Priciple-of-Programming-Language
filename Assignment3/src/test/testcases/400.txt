@@ -1,7 +1,0 @@
-Class a{
-                        Var a:Int;
-                        Var a:Int;
-                        }
-                        Class b{}
-                        Class c{}
-                        Class d{}

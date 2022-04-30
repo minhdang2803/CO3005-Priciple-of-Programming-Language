@@ -1,6 +1,0 @@
-Class a{
-                           b(){
-                               Val c:Int = 2;
-                               c=2; ## Error here ##
-                           }
-                           }

@@ -1,6 +1,0 @@
-Class a{
-                        b(){
-                            Var a:Int;
-                            Var a:Int;
-                        }
-                        }

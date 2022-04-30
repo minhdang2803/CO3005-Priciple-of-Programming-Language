@@ -1,4 +1,0 @@
-Class a{
-        Var a:Int;
-        a(){}
-    }

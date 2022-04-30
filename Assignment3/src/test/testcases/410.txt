@@ -1,7 +1,0 @@
-Class a{
-                           b(){
-                               Val b:Int = 1;
-                               Var c:Int = 1;
-                               a=1; ## This Line Error ##
-                           }
-                           }

@@ -1,5 +1,0 @@
-Class a{
-                        b(a:Int){
-                            Val a:Int = 1;
-                        }
-                        }
