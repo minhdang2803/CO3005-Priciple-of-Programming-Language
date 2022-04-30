@@ -1,7 +1,7 @@
 
                         Class B{
                             Var b:Int = 1;
-                            c(){}
+                            c(){Return 12;}
                         }
                         Class A:B{
                         }
@@ -9,7 +9,6 @@
                             e(){
                                 Var a:A;
                                 a.b= 2;
-                                a.c();
                                 a.e();
                             }
                         }

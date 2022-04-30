@@ -1,14 +1,15 @@
 
                         Class B{
                             Var b:Int = 1;
-                            c(){}
+                            c(){Return 12;}
                         }
-                        Class A{
-                            Var class_a:B;
+                        Class A:B{
                         }
                         Class C{
                             e(){
                                 Var a:A;
-                                a.class_a.c = 2; ##Error here##
+                                a.b= 2;
+                                a.c();
+
                             }
                         }

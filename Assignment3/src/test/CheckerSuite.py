@@ -83,7 +83,7 @@ class CheckerSuite(unittest.TestCase):
                     }"""
         expect = "Redeclared Variable: a"
         self.assertTrue(TestChecker.test(input,expect,407))
-
+#
     def test_408(self):
         """Simple program: int main() {} """
         input = """Class a{
@@ -124,7 +124,7 @@ class CheckerSuite(unittest.TestCase):
                     }"""
         expect = "Undeclared Identifier: a"
         self.assertTrue(TestChecker.test(input,expect,410))
-
+#
     def test_411(self):
         """Simple program: int main() {} """
         input = """
@@ -138,7 +138,7 @@ class CheckerSuite(unittest.TestCase):
                     }"""
         expect = "Undeclared Class: C"
         self.assertTrue(TestChecker.test(input,expect,411))
-
+#
     def test_412(self):
         """Simple program: int main() {} """
         input = """
@@ -179,7 +179,7 @@ class CheckerSuite(unittest.TestCase):
         input = """
                     Class B{
                         Var b:Int = 1;
-                        c(){}
+                        c(){Return;}
                     }
                     Class A{
                     b(){
@@ -198,7 +198,7 @@ class CheckerSuite(unittest.TestCase):
         input = """
                         Class B{
                             Var b:Int = 1;
-                            c(){}
+                            c(){Return;}
                         }
                         Class A:B{
                         }
@@ -218,7 +218,7 @@ class CheckerSuite(unittest.TestCase):
         input = """
                         Class B{
                             Var b:Int = 1;
-                            c(){}
+                            c(){Return 12;}
                         }
                         Class A:B{
                         }
@@ -226,7 +226,6 @@ class CheckerSuite(unittest.TestCase):
                             e(){
                                 Var a:A;
                                 a.b= 2;
-                                a.c();
                                 a.e();
                             }
                         }"""
@@ -272,7 +271,104 @@ class CheckerSuite(unittest.TestCase):
         expect = "Type Mismatch In Expression: ArrayCell(Id(b),[FloatLit(1.2)])"
         self.assertTrue(TestChecker.test(input, expect, 420))
 
-    # def test_421(self):
+    def test_421(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class B{
+                            Var b:Int = 1;
+                            c(){}
+                        }
+                        Class A{
+                            Var class_a:B;
+                        }
+                        Class C{
+                            e(){
+                                Var a:A;
+                                a.class_a.c = 2; ##Error here##
+                            }
+                        }"""
+        expect = "Undeclared Attribute: c"
+        self.assertTrue(TestChecker.test(input, expect, 421))
+
+    def test_422(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class B{
+                            a(){}
+                            c(){}
+                        }
+                        Class A{
+                            Var class_a:B;
+                        }
+                        Class C{
+                            e(){
+                                Var a:A;
+                                a.class_a.b(); ##Error here##
+                            }
+                        }"""
+        expect = "Undeclared Method: b"
+        self.assertTrue(TestChecker.test(input, expect, 422))
+
+    def test_423(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class C{
+                            e(){
+                                Return 12;
+                            }
+                        }
+                        Class B{
+                            b(){
+                                Var a: C;
+                                a.e();
+                            }
+                        }
+                        """
+        expect = "Type Mismatch In Statement: Call(Id(a),Id(e),[])"
+        self.assertTrue(TestChecker.test(input, expect, 423))
+    def test_424(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class B{
+                            Var b:Int = 1;
+                            Val c:Int = 2;
+                        }
+                        Class A{
+                            class_a(){
+                                Var a : B;
+                                Return a;
+                            }
+                        }
+                        Class C{
+                            e(){
+                                Var a:A;
+                                a.class_a().c = 3; ##Error here##
+                            }
+                        }"""
+        expect = "Cannot Assign To Constant: AssignStmt(FieldAccess(CallExpr(Id(a),Id(class_a),[]),Id(c)),IntLit(3))"
+        self.assertTrue(TestChecker.test(input, expect, 424))
+
+
+    def test_425(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class B{
+                            Var b:Int = 1;
+                            c(){Return 12;}
+                        }
+                        Class A:B{
+                        }
+                        Class C{
+                            e(){
+                                Var a:A;
+                                a.b= 2;
+                                a.c();
+
+                            }
+                        }"""
+        expect = "Type Mismatch In Statement: Call(Id(a),Id(c),[])"
+        self.assertTrue(TestChecker.test(input, expect, 425))
+    # def test_423(self):
     #     """Simple program: int main() {} """
     #     input = """
     #                     Class C{
