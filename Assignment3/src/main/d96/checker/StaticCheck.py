@@ -43,7 +43,7 @@ class ExpUtils:
 # Author of this structure: Le Thien An senpoi 🥺
 class Node:
     def __init__(self, name=None, typ=None, data=None, param=None, block=None, inherit=None, parent=None, kind=None,
-                 tag=None, isConst = None):
+                 tag=None, isConst=None):
         self.name = name
         self.typ = typ
         self.data = data
@@ -77,14 +77,14 @@ class Tree:
 
     def addAttribute(self, name, typ, data, kind, isConst):
         if self.redeclared_check(name, self.current):
-            new_node = Node(name=name, typ=typ, data=data, kind=kind, tag='attr', isConst= isConst)
+            new_node = Node(name=name, typ=typ, data=data, kind=kind, tag='attr', isConst=isConst)
             self.current.block.append(new_node)
             return True
         return False
 
     def addMethod(self, name, kind):
         if self.redeclared_check(name, self.current):
-            new_node = Node(name=name, kind=kind, block=[], parent=self.current, tag='method')
+            new_node = Node(name=name, kind=kind, block=[], parent=self.current, tag='method', typ=VoidType)
             self.current.block.append(new_node)
             self.current = new_node
             return True
@@ -95,7 +95,7 @@ class Tree:
             if n.name == funcName:
                 n.param = [element for element in node.block][:size]
 
-    def addVarOrConst(self, name, typ, data, kind,  isConst):
+    def addVarOrConst(self, name, typ, data, kind, isConst):
         if self.redeclared_check(name, self.current):
             new_node = Node(name=name, typ=typ, data=data, tag='id', isConst=isConst, kind=kind)
             self.current.block.append(new_node)
@@ -147,6 +147,41 @@ class Tree:
                     if element.name == name and element.tag == 'method':
                         return element
         return None
+
+    def getInheritClass(self, class_name):
+        result = []
+        node = self.searchClass(class_name)
+        if node is not None:
+            result.append(node.name)
+            if node.inherit:
+                result += self.getInheritClass(node.inherit)
+            else:
+                result += []
+        return result
+
+    def isInherit(self, class_name):
+        for element in self.head.block:
+            if element.name == class_name and element.inherit:
+                return True
+        return False
+
+    def checkType(self, type_decl, type_assign):
+        if type(type_decl) is FloatType and type(type_assign) in [FloatType, IntType]:
+            return True
+        if type(type_decl) is str and type(type_assign) is str:
+            if type_decl == type_assign:
+                return True
+            else:
+                inherit_assign = self.getInheritClass(type_assign)[::-1]
+                if not self.isInherit(type_decl):
+                    if type_decl in inherit_assign[1:]:
+                        return False
+                else:
+                    idx = inherit_assign.index(type_decl)
+                    inherit_assign = inherit_assign[:idx]
+                    if type_decl in inherit_assign:
+                        return True
+        return type(type_decl) is type(type_assign)
 
 
 class StaticChecker(BaseVisitor, Utils):
@@ -245,7 +280,7 @@ class StaticChecker(BaseVisitor, Utils):
         if type(data) is not type(typ[0]):
             raise TypeMismatchInConstant(ast)
 
-        if c[0].addVarOrConst(name, typ[0], data, kind,  'immutable'):
+        if c[0].addVarOrConst(name, typ[0], data, kind, 'immutable'):
             node = c[0].searchId(name, c[0].current)
             return node, 'immutable'
         ret_type = Constant() if c[1] == 'INST' else Parameter()
@@ -357,18 +392,18 @@ class StaticChecker(BaseVisitor, Utils):
             # if Object is not class type => raise
             if type(obj[0].typ) is not str:
                 raise TypeMismatchInExpression(ast)
-            node = c.searchMethod(ast.method.name, obj[0].typ)
-            # if there is no method (callee) exist -> raise
-            if node is None:
-                raise Undeclared(Method(), ast.method.name)
+        node = c.searchMethod(ast.method.name, obj[0].typ)
+        # if there is no method (callee) exist -> raise
+        if node is None:
+            raise Undeclared(Method(), ast.method.name)
         # if object and method_name is not the same kind
         if node.kind != obj[0].kind:
             raise IllegalMemberAccess(ast)
-        #
+
         # if member is method && member return type is Void => raise
         if node.tag == 'method' and node.typ is VoidType:
             raise TypeMismatchInExpression(ast)
-        #
+
         # if node.tag == 'method':
         #     args = node.param
         #     param = [self.visit(element, c) for element in ast.param]
