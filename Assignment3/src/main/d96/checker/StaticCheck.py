@@ -166,7 +166,7 @@ class Tree:
         return False
 
     def checkType(self, type_decl, type_assign):
-        if type(type_decl) is FloatType and type(type_assign) in [FloatType, IntType]:
+        if (type_decl) is FloatType and (type_assign) in [FloatType, IntType]:
             return True
         if type(type_decl) is str and type(type_assign) is str:
             if type_decl == type_assign:
@@ -181,7 +181,7 @@ class Tree:
                     inherit_assign = inherit_assign[:idx]
                     if type_decl in inherit_assign:
                         return True
-        return type(type_decl) is type(type_assign)
+        return (type_decl) == (type_assign)
 
 
 class StaticChecker(BaseVisitor, Utils):
@@ -209,20 +209,21 @@ class StaticChecker(BaseVisitor, Utils):
             raise Redeclared(Class(), ast.classname.name)
 
     def visitAttributeDecl(self, ast, c):
-        name = typ = data = kind = category = None
+        name = typ = node_data = kind = category = None
         if type(ast.decl) is VarDecl:
             name = ast.decl.variable.name
-            typ = self.visit(ast.decl.varType, c)
-            data, category = self.visit(ast.decl.varInit, c) if ast.decl.varInit is not None else (None, None)
+            typ = self.visit(ast.decl.varType, c)[0].typ
+            node_data, category = self.visit(ast.decl.varInit, c) if ast.decl.varInit is not None else (None, None)
             kind = 'Instance' if type(ast.kind) is Instance else 'Static'
             category = 'mutable'
         if type(ast.decl) is ConstDecl:
             name = ast.decl.constant.name
-            typ = self.visit(ast.decl.constType, c)
-            data, category = self.visit(ast.decl.value, c) if ast.decl.value is not None else (None, None)
+            typ = self.visit(ast.decl.constType, c)[0].typ
+            node_data, category = self.visit(ast.decl.value, c) if ast.decl.value is not None else (None, None)
             kind = 'Instance' if type(ast.kind) is Instance else 'Static'
             category = 'immutable'
-        if c.addAttribute(name, typ[0], data, kind, category):
+        data = node_data.typ if node_data is not None else node_data
+        if c.addAttribute(name, typ, data, kind, category):
             node = c.searchAttr(name, c.current.name)
             return node, category
         else:
@@ -257,16 +258,14 @@ class StaticChecker(BaseVisitor, Utils):
     def visitVarDecl(self, ast, c):
         # fetching data
         name = ast.variable.name
-        typ = self.visit(ast.varType, c)
+        typ = self.visit(ast.varType, c)[0].typ
         node_data, category = self.visit(ast.varInit, c) if ast.varInit is not None else (None, None)
+        data = node_data.typ if node_data is not None else node_data
         kind = 'Static' if '$' in name else 'Instance'
 
-        # handle data
-        typ = typ[0] if type(typ[0]) is not Node else typ[0].typ
-        data = node_data.typ if type(node_data) is Node else node_data
         # Check if type of data is not type of assigned value
-        if node_data is not None and type(typ) is not str:
-            if type(typ) is not VoidType and type(typ) is not type(data):
+        if data is not None and type(typ) is not str:
+            if (typ) is not VoidType and (typ) is not (data):
                 raise TypeMismatchInStatement(ast)
 
         if c[0].addVarOrConst(name, typ, data, kind, 'mutable'):
@@ -278,16 +277,15 @@ class StaticChecker(BaseVisitor, Utils):
     def visitConstDecl(self, ast, c):
         name = ast.constant.name
         kind = 'Static' if '$' in name else 'Instance'
-        typ = self.visit(ast.constType, c)
+        typ = self.visit(ast.constType, c)[0].typ
         node_data, category = self.visit(ast.value, c) if ast.value is not None else (None, None)
-
-        # handle data
-        typ = typ[0] if type(typ[0]) is not Node else typ[0].typ
-        data = node_data.typ if type(node_data) is Node else node_data
+        data = node_data.typ if node_data is not None else node_data
 
         if data is None or category == 'mutable' or ExpUtils.isNotConst(data):
             raise IllegalConstantExpression(ast.value)
-        if type(data) != type(typ):
+        a = type(data)
+        b = type(typ)
+        if data is not typ:
             raise TypeMismatchInConstant(ast)
 
         if c[0].addVarOrConst(name, typ, data, kind, 'immutable'):
@@ -396,7 +394,7 @@ class StaticChecker(BaseVisitor, Utils):
                 if not c.checkType(param[index].typ, args[index].typ):
                     raise TypeMismatchInStatement(ast)
         # return value
-        return node, None
+        return node.typ, None
 
     def visitCallExpr(self, ast, c):
         node = obj = None
@@ -422,7 +420,7 @@ class StaticChecker(BaseVisitor, Utils):
         c = c[0] if type(c) is tuple else c
         if node.tag == 'method':
             param = node.param
-            args = [self.visit(element, c)[0] for element in ast.param]
+            args = [self.visit(element, c)[0].typ for element in ast.param]
             if len(param) < len(args):
                 raise TypeMismatchInExpression(ast)
             for index in range(len(param)):
@@ -448,64 +446,64 @@ class StaticChecker(BaseVisitor, Utils):
         node = None
         if type(ast.expr) is Id:
             return_val, category = self.visit(ast.expr, (c, None, 'id'))
+            return_val = return_val.typ if return_val.typ is not None else None
             node = c.searchId(ast.expr.name, c.current)
         else:
-            return_val = VoidType() if ast.expr is None else self.visit(ast.expr, c)[0]
+            return_val = VoidType() if ast.expr is None else self.visit(ast.expr, c)[0].typ
         if c.current.tag == 'method':
-            c.current.typ = return_val.typ if type(ast.expr) is Id else return_val
+            c.current.typ = return_val
         return node
 
     def visitIntLiteral(self, ast, c):
-        return IntType(), None
+        return Node(typ=IntType), None
 
     def visitFloatLiteral(self, ast, c):
-        return FloatType(), None
+        return Node(typ=FloatType), None
 
     def visitBooleanLiteral(self, ast, c):
-        return BoolType(), None
+        return Node(typ=BoolType), None
 
     def visitNullLiteral(self, ast, c):
-        return NullLiteral(), None
+        return Node(typ=NullLiteral), None
 
     def visitSelfLiteral(self, ast, c):
-        return SelfLiteral(), None
+        return Node(typ=SelfLiteral), None
 
     def visitStringLiteral(self, ast, c):
-        return StringType(), None
+        return Node(typ=StringType), None
 
     # def visitArrayLiteral(self, ast, c):  # pass
-
     def visitIntType(self, ast, c):
-        return IntType(), None
+        return Node(typ=IntType), None
 
     def visitFloatType(self, ast, c):
-        return FloatType(), None
+        return Node(typ=FloatType), None
 
     def visitBoolType(self, ast, c):
-        return BoolType(), None
+        return Node(typ=BoolType), None
 
     def visitStringType(self, ast, c):
-        return StringType(), None
+        return Node(typ=StringType), None
 
     def visitClassType(self, ast, c):
         if type(c) is tuple:
             node = c[0].searchClass(ast.classname.name)
             if node is None:
                 raise Undeclared(Class(), ast.classname.name)
-            return node.name, None
+            return Node(typ=node.name), None
 
         node = c.searchClass(ast.classname.name)
         if node is None:
             raise Undeclared(Class(), ast.classname.name)
-        return node.name, None
+        return Node(typ=node.name), None
 
     def visitArrayType(self, ast, c):
         return ast, None
 
     def visitVoidType(self, ast, c):
-        return VoidType(), None
+        return Node(typ=VoidType), None
 
     def visitArrayType(self, ast, c):
-        return ast, None
+        return Node(typ=ast), None
 
     # if objType == 'attr':  #     raise Undeclared(Attribute(), name)  #  # if objType == 'method':  #     raise Undeclared(Method(), name)  # Note: check hết mọi điều kiện rồi mới đến redeclared
