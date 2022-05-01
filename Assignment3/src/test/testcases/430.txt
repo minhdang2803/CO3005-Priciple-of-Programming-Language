@@ -10,6 +10,8 @@
                             e(){
                                 Var a:B;
                                 Var d:Float = a.c(1,2);
-                                Var e:String = a.c(1.1,2);
+                                a.d();
+                                Var e:Float = a.b;
+                                Var f:Float = a.d;
                             }
                         }

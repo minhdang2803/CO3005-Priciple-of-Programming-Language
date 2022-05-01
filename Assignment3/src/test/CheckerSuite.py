@@ -204,7 +204,7 @@ class CheckerSuite(unittest.TestCase):
         input = """
                         Class B{
                             Var b:Int = 1;
-                            c(){Return;}
+                            c(){}
                         }
                         Class A:B{
                         }
@@ -374,7 +374,7 @@ class CheckerSuite(unittest.TestCase):
                         }"""
         expect = "Type Mismatch In Statement: Call(Id(a),Id(c),[])"
         self.assertTrue(TestChecker.test(input, expect, 425))
-
+#
     def test_426(self):
         """Simple program: int main() {} """
         input = """
@@ -388,25 +388,190 @@ class CheckerSuite(unittest.TestCase):
                         Class C{
                             e(){
                                 Var a:B;
-                                Var d:Int = a.c(1,2);
-                                Var e:Int = a.c(1,"abc");
+                                Var d:Float = a.c(1,2);
+                                Var e:String = a.c(1.1,2);
                             }
                         }"""
-        expect = "Type Mismatch In Expression: CallExpr(Id(a),Id(c),[IntLit(1),StringLit(abc)])"
+        expect = "Type Mismatch In Expression: CallExpr(Id(a),Id(c),[FloatLit(1.1),IntLit(2)])"
         self.assertTrue(TestChecker.test(input, expect, 426))
 
     def test_427(self):
         """Simple program: int main() {} """
-        input = """Class a{
-                    b(){
-                        Var b:Int = 1.2;
-                        Var c:Int = 1;
-                        a=1;
-                    }
-                    }"""
-        expect = "Type Mismatch In Statement: VarDecl(Id(b),IntType,FloatLit(1.2))"
+        input = """
+                        Class B{
+                            Var b:Int = 1;
+                            c(g:Int; h:Float){
+                                Return 1;
+                            }
+                            d(){}
+                        }
+                        Class C{
+                            e(){
+                                Var a:B;
+                                Var d:Float = a.c(1,2);
+                                Var e:String = a.c(1.1,2);
+                            }
+                        }"""
+        expect = "Type Mismatch In Expression: CallExpr(Id(a),Id(c),[FloatLit(1.1),IntLit(2)])"
         self.assertTrue(TestChecker.test(input, expect, 427))
 
+    def test_428(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class B{
+                            Var b:Int = 1;
+                            c(g:Int; h:Float){
+                                Return 1;
+                            }
+                            d(){}
+                        }
+                        Class C{
+                            e(){
+                                Var a:B;
+                                Var d:Float = a.c(1,2);
+                                Var e:String = a.c(1,2);
+                            }
+                        }"""
+        expect = "Type Mismatch In Statement: VarDecl(Id(e),StringType,CallExpr(Id(a),Id(c),[IntLit(1),IntLit(2)]))"
+        self.assertTrue(TestChecker.test(input, expect, 428))
+
+    def test_429(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class B{
+                            Var b:Int = 1;
+                            c(g:Int; h:Float){
+                                Return 1;
+                            }
+                            d(){}
+                        }
+                        Class C{
+                            e(){
+                                Var a:B;
+                                Var d:Float = a.c(1,2);
+                                a.d();
+                                Var e:String = a.d();
+                            }
+                        }"""
+        expect = "Type Mismatch In Expression: CallExpr(Id(a),Id(d),[])"
+        self.assertTrue(TestChecker.test(input, expect, 429))
+
+
+    def test_430(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class B{
+                            Var b:Int = 1;
+                            c(g:Int; h:Float){
+                                Return 1;
+                            }
+                            d(){}
+                        }
+                        Class C{
+                            e(){
+                                Var a:B;
+                                Var d:Float = a.c(1,2);
+                                a.d();
+                                Var e:Float = a.b;
+                                Var f:Float = a.d;
+                            }
+                        }"""
+        expect = "Undeclared Attribute: d"
+        self.assertTrue(TestChecker.test(input, expect, 430))
+
+    def test_431(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class B{
+                            Var b:Int = 1;
+                            c(g:Int; h:Float){
+                                Return 1;
+                            }
+                            d(){}
+                        }
+                        Class C{
+                            e(){
+                                Var a:B;
+                                Var d:Float = a.c(1,2);
+                                a.d();
+                                Var e:Float = a.b;
+                                Var f:String = a.b;
+                            }
+                        }"""
+        expect = "Type Mismatch In Statement: VarDecl(Id(f),StringType,FieldAccess(Id(a),Id(b)))"
+        self.assertTrue(TestChecker.test(input, expect, 431))
+
+    def test_432(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class B{
+                            Var b:Int = 1;
+                            c(g:Int; h:Float){
+                                Return 1;
+                            }
+                            d(){}
+                        }
+                        Class C{
+                            e(){
+                                Var a:B;
+                                Val d:Float = a.c(1,2);
+                                Val e:String = a.c(1,2);
+                            }
+                        }"""
+        expect = "Type Mismatch In Constant Declaration: ConstDecl(Id(e),StringType,CallExpr(Id(a),Id(c),[IntLit(1),IntLit(2)]))"
+        self.assertTrue(TestChecker.test(input, expect, 432))
+
+    def test_433(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class C{
+                            e(){
+                                Val a : Int = 1.2;
+                            }
+                        }"""
+        expect = "Type Mismatch In Constant Declaration: ConstDecl(Id(a),IntType,FloatLit(1.2))"
+        self.assertTrue(TestChecker.test(input, expect, 433))
+
+    def test_435(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class B{
+                            Var b:Int = 1;
+                            c(g:Int; h:Float){
+                                Return 1;
+                            }
+                            d(){}
+                        }
+                        Class C{
+                            e(){
+                                Var a:B;
+                                Val d:Float = a.c(1,2);
+                                Val e:String = a.d(1,2);
+                            }
+                        }"""
+        expect = "Type Mismatch In Expression: CallExpr(Id(a),Id(d),[IntLit(1),IntLit(2)])"
+        self.assertTrue(TestChecker.test(input, expect, 435))
+
+    def test_436(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class B{
+                            Var b:Int = 1;
+                            c(g:Int; h:Float){
+                                Return 1;
+                            }
+                            d(x:Int; y:Float; z:String){}
+                        }
+                        Class C{
+                            e(){
+                                Var a:B;
+                                Val d:Float = a.c(1,2);
+                                a.d(1,2,"a");
+                                a.d(1,2,3);
+                            }
+                        }"""
+        expect = "Type Mismatch In Statement: Call(Id(a),Id(d),[IntLit(1),IntLit(2),IntLit(3)])"
+        self.assertTrue(TestChecker.test(input, expect, 436))
 # def test_423(self):
 #     """Simple program: int main() {} """
 #     input = """
@@ -459,5 +624,3 @@ class CheckerSuite(unittest.TestCase):
 #                     }"""
 #     expect = "Type Mismatch In Expression: UnaryOp(!,UnaryOp(-,UnaryOp(-,FloatLit(1.22))))"
 #     self.assertTrue(TestChecker.test(input, expect, 423))
-
-

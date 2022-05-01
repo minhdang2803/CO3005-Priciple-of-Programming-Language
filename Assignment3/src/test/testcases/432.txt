@@ -9,7 +9,7 @@
                         Class C{
                             e(){
                                 Var a:B;
-                                Var d:Float = a.c(1,2);
-                                Var e:String = a.c(1.1,2);
+                                Val d:Float = a.c(1,2);
+                                Val e:String = a.c(1,2);
                             }
                         }

@@ -1,7 +1,7 @@
 
                         Class B{
                             Var b:Int = 1;
-                            c(){Return;}
+                            c(){}
                         }
                         Class A:B{
                         }
