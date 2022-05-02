@@ -1,14 +1,14 @@
 
-                        Class B{
-                            a(){}
-                            c(){}
-                        }
-                        Class A{
-                            Var class_a:B;
-                        }
-                        Class C{
-                            e(){
-                                Var a:A;
-                                a.class_a.b(); ##Error here##
+                            Class B{
+                                a(){}
+                                c(){}
                             }
-                        }
+                            Class A{
+                                Var class_a:B;
+                            }
+                            Class C{
+                                e(){
+                                    Var a:A;
+                                    a.class_a.b(); ##Error here##
+                                }
+                            }

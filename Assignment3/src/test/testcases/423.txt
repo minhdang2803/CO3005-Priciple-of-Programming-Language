@@ -1,13 +1,13 @@
 
-                        Class C{
-                            e(){
-                                Return 12;
+                            Class C{
+                                e(){
+                                    Return 12;
+                                }
                             }
-                        }
-                        Class B{
-                            b(){
-                                Var a: C;
-                                a.e();
+                            Class B{
+                                b(){
+                                    Var a: C;
+                                    a.e();
+                                }
                             }
-                        }
-                        
+                            

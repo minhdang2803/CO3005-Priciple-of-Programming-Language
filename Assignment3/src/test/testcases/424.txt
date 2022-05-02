@@ -1,17 +1,17 @@
 
-                        Class B{
-                            Var b:Int = 1;
-                            Val c:Int = 2;
-                        }
-                        Class A{
-                            class_a(){
-                                Var a : B;
-                                Return a;
+                            Class B{
+                                Var b:Int = 1;
+                                Val c:Int = 2;
                             }
-                        }
-                        Class C{
-                            e(){
-                                Var a:A;
-                                a.class_a().c = 3; ##Error here##
+                            Class A{
+                                class_a(){
+                                    Var a : B;
+                                    Return a;
+                                }
                             }
-                        }
+                            Class C{
+                                e(){
+                                    Var a:A;
+                                    a.class_a().c = 3; ##Error here##
+                                }
+                            }

@@ -1,14 +1,14 @@
 
-                        Class B{
-                            Var b:Int = 1;
-                            c(){Return 12;}
-                        }
-                        Class A:B{
-                        }
-                        Class C{
-                            e(){
-                                Var a:A;
-                                a.b= 2;
-                                a.e();
+                            Class B{
+                                Var b:Int = 1;
+                                c(){Return 12;}
                             }
-                        }
+                            Class A:B{
+                            }
+                            Class C{
+                                e(){
+                                    Var a:A;
+                                    a.b= 2;
+                                    a.e();
+                                }
+                            }

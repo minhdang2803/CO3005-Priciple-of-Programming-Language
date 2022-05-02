@@ -4,6 +4,8 @@
 from StaticError import *
 from Utils import Utils
 from Visitor import *
+
+
 # from src.main.d96.utils.Visitor import BaseVisitor
 
 ## TODO
@@ -58,6 +60,7 @@ class Tree:
     def __init__(self):
         self.head = Node(name='global', block=[])
         self.current = self.head
+        self.Self = None
 
     def redeclared_check(self, varName, node):
         for n in node.block:
@@ -67,9 +70,11 @@ class Tree:
 
     def addClass(self, className, parentName):
         if self.redeclared_check(className, self.current):
-            new_node = Node(name=className, block=[], parent=self.current, inherit=parentName, tag='class')
+            new_node = Node(name=className, block=[], parent=self.current, inherit=parentName, tag='class',
+                            typ=className)
             self.current.block.append(new_node)
             self.current = new_node
+            self.Self = new_node
             return True
         return False
 
@@ -126,10 +131,7 @@ class Tree:
                 if element.name == name and element.tag == 'attr':
                     return element
             if node.inherit:
-                parent = self.searchClass(node.inherit)
-                for element in parent.block:
-                    if element.name == name and element.tag == 'attr':
-                        return element
+                return self.searchAttr(name, node.inherit)
         return None
 
     def searchMethod(self, name, class_name):
@@ -139,10 +141,7 @@ class Tree:
                 if element.name == name and element.tag == 'method':
                     return element
             if node.inherit:
-                parent = self.searchClass(node.inherit)
-                for element in parent.block:
-                    if element.name == name and element.tag == 'method':
-                        return element
+                return self.searchMethod(name, node.inherit)
         return None
 
     def getInheritClass(self, class_name):
@@ -201,6 +200,7 @@ class StaticChecker(BaseVisitor, Utils):
             for member in ast.memlist:
                 self.visit(member, c)
             c.current = c.current.parent
+            c.Self = None  # Out of the Class -> Global -> Self = None
             return
         else:
             raise Redeclared(Class(), ast.classname.name)
@@ -333,40 +333,26 @@ class StaticChecker(BaseVisitor, Utils):
 
     # object.fieldname
     def visitFieldAccess(self, ast, c):
-        node = obj = None
-        if type(ast.obj) is Id:
-            c = c[0] if type(c) is tuple else c
-            obj = self.visit(ast.obj, (c, None, 'id')) # find object, obj is VarDecl
-            node = c.searchAttr(ast.fieldname.name, obj[0].typ)
-            # if there is no attribute -> raise
-            if node is None:
-                raise Undeclared(Attribute(), ast.fieldname.name)
-            # if type of obj is not class -> raise
-            if type(obj[0].typ) is not str:
-                raise TypeMismatchInExpression(ast)
-            if node.kind != obj[0].kind:
-                raise IllegalMemberAccess(ast)
-            return node, node.isConst
-        else:
-            obj = self.visit(ast.obj, c)
-            typ = obj[0] if type(obj[0]) is str else obj[0].typ
-            node = c.searchAttr(ast.fieldname.name, typ)
-            if type(typ) is not str:
-                raise TypeMismatchInExpression(ast)
-            # if there is no attribute -> raise
-            if node is None:
-                raise Undeclared(Attribute(), ast.fieldname.name)
-            if node.kind != obj[0].kind:
-                raise IllegalMemberAccess(ast)
-            return node, node.isConst
+        c = c[0] if type(c) is tuple else c
+        obj = self.visit(ast.obj, (c, None, 'id')) if type(ast.obj) is Id else self.visit(ast.obj, c)
+        typ = obj[0] if type(obj[0]) is str else obj[0].typ
+        # Obj must be class Type
+        if type(typ) is not str:
+            raise TypeMismatchInExpression(ast)
+        # if there is no attribute -> raise
+        node = c.searchAttr(ast.fieldname.name, typ)
+        if node is None:
+            raise Undeclared(Attribute(), ast.fieldname.name)
+        # if node.kind != obj[0].kind:
+        #     raise IllegalMemberAccess(ast)
+        return node, node.isConst
 
     def visitCallStmt(self, ast, c):
-        node = obj = None
         if type(ast.obj) is Id:
             obj = self.visit(ast.obj, (c, None, 'id'))
         else:
             obj = self.visit(ast.obj, c)
-        # if Object is not class type => raise
+        # Type of object must be Class
         if type(obj[0].typ) is not str:
             raise TypeMismatchInStatement(ast)
         node = c.searchMethod(ast.method.name, obj[0].typ)
@@ -379,8 +365,7 @@ class StaticChecker(BaseVisitor, Utils):
         # if member is method && member return type is Void => raise
         if node.tag == 'method' and type(node.typ) is not VoidType:
             raise TypeMismatchInStatement(ast)
-
-        c = c[0] if type(c) is tuple else c
+        # Check type of params and arguments
         if node.tag == 'method':
             param = node.param
             args = [self.visit(element, c)[0].typ for element in ast.param]
@@ -393,27 +378,22 @@ class StaticChecker(BaseVisitor, Utils):
         return node, None
 
     def visitCallExpr(self, ast, c):
-        node = obj = None
-        if type(ast.obj) is Id:
-            obj = self.visit(ast.obj, (c[0], None, 'id')) if type(c) is tuple else self.visit(ast.obj, (c, None, 'id'))
-            # if Object is not class type => raise
-            if type(obj[0].typ) is not str:
-                raise TypeMismatchInExpression(ast)
-            node = c[0].searchMethod(ast.method.name, obj[0].typ) if type(c) is tuple else c.searchMethod(
-                ast.method.name, obj[0].typ)
+        c = c[0] if type(c) is tuple else c
+        obj = self.visit(ast.obj, (c, None, 'id')) if type(ast.obj) is Id else self.visit(ast.obj, c)
+        # Type of object must be Class
+        if type(obj[0].typ) is not str:
+            raise TypeMismatchInExpression(ast)
+        node = c.searchMethod(ast.method.name, obj[0].typ)
         # if there is no method (callee) exist -> raise
         if node is None:
             raise Undeclared(Method(), ast.method.name)
         # if object and method_name is not the same kind
         if node.kind != obj[0].kind:
             raise IllegalMemberAccess(ast)
-
         # if member is method && member return type is Void => raise
         if node.tag == 'method' and type(node.typ) is VoidType:
             raise TypeMismatchInExpression(ast)
-
         # check type of params and arguments
-        c = c[0] if type(c) is tuple else c
         if node.tag == 'method':
             param = node.param
             args = [self.visit(element, c)[0].typ for element in ast.param]
@@ -424,16 +404,63 @@ class StaticChecker(BaseVisitor, Utils):
                     raise TypeMismatchInExpression(ast)
         return node, None
 
+    def visitBinaryOp(self, ast: BinaryOp, c):
+        c = c[0] if type(c) is tuple else c
+        right = self.visit(ast.right, c)[0].typ
+        left = self.visit(ast.left, c)[0].typ
+        op = ast.op
+
+        if op in ['+', '-', '*', '/']:
+            if type(left) not in [IntType, FloatType] or type(right) not in [IntType, FloatType]:
+                raise TypeMismatchInExpression(ast)
+            if type(left) is IntType and type(right) is IntType:
+                return Node(typ=IntType()), None
+            return Node(typ=FloatType()), None
+        elif op == '%':
+            if type(left) is IntType and type(right) is IntType:
+                return Node(typ=IntType()), None
+            raise TypeMismatchInExpression(ast)
+        elif op in ['&&', '||']:
+            if type(left) is BoolType and type(right) is BoolType:
+                return Node(typ=BoolType()), None
+            raise TypeMismatchInExpression(ast)
+        elif op in ['==.', '+.']:
+            if type(left) is not StringType or type(right) is not StringType:
+                raise TypeMismatchInExpression(ast)
+            if op == '==.':
+                return Node(typ=BoolType()), None
+            return Node(typ=StringType()), None
+        elif op in ['==', '!=']:
+            if type(left) not in [BoolType, IntType] or type(right) not in [BoolType, IntType]:
+                raise TypeMismatchInExpression(ast)
+            return Node(typ=BoolType()), None
+        elif op in ['<', '>', '<=', '>=']:
+            if type(left) not in [FloatType, IntType] or type(right) not in [FloatType, IntType]:
+                raise TypeMismatchInExpression(ast)
+            return Node(typ=BoolType()), None
+
+    def visitUnaryOp(self, ast: UnaryOp, c):
+        exp = self.visit(ast.body, c)[0].typ
+        op = ast.op
+        if op == '-':
+            if type(exp) not in [IntType, FloatType]:
+                raise TypeMismatchInExpression(ast)
+            return (Node(typ=IntType()), None) if type(exp) is IntType else (Node(typ=FloatType()), None)
+        if op in '!':
+            if type(exp) is not BoolType:
+                raise TypeMismatchInExpression(ast)
+            return Node(typ=BoolType()), None
+
     def visitArrayCell(self, ast, c):
         # array is a variable: ex a[5]
-        arrType = self.visit(ast.arr, (c, None, 'id'))
-        idxType = [self.visit(element, c) for element in ast.idx]
-        if type(arrType[0].typ) is not ArrayType:
+        arr_type = self.visit(ast.arr, (c, None, 'id'))[0].typ
+        idx_type = [self.visit(element, c)[0].typ for element in ast.idx]
+        if type(arr_type) is not ArrayType:
             raise TypeMismatchInExpression(ast)
-        for element in idxType[0]:
+        for element in idx_type:
             if type(element) is not IntType:
                 raise TypeMismatchInExpression(ast)
-        return arrType[0], None
+        return arr_type, None
 
     def visitReturn(self, ast, c):
         node = None
@@ -460,7 +487,8 @@ class StaticChecker(BaseVisitor, Utils):
         return Node(typ=NullLiteral()), None
 
     def visitSelfLiteral(self, ast, c):
-        return Node(typ=SelfLiteral()), None
+        c = c[0] if type(c) is tuple else c
+        return c.Self, None
 
     def visitStringLiteral(self, ast, c):
         return Node(typ=StringType()), None

@@ -1,14 +1,14 @@
 
-                        Class B{
-                            Var b:Int = 1;
-                            c(){}
-                        }
-                        Class A{
-                            Var class_a:B;
-                        }
-                        Class C{
-                            e(){
-                                Var a:A;
-                                a.class_a.c = 2; ##Error here##
+                            Class B{
+                                Var b:Int = 1;
+                                c(){}
                             }
-                        }
+                            Class A{
+                                Var class_a:B;
+                            }
+                            Class C{
+                                e(){
+                                    Var a:A;
+                                    a.class_a.c = 2; ##Error here##
+                                }
+                            }
