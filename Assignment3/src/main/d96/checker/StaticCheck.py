@@ -406,50 +406,54 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitBinaryOp(self, ast: BinaryOp, c):
         c = c[0] if type(c) is tuple else c
-        right = self.visit(ast.right, c)[0].typ
-        left = self.visit(ast.left, c)[0].typ
+        right, category = self.visit(ast.right, (c, None, 'id')) if type(ast.right) is Id else self.visit(ast.right, c)
+        left, category = self.visit(ast.left, (c, None, 'id')) if type(ast.left) is Id else self.visit(ast.left, c)
         op = ast.op
+        right = right.typ
+        left = left.typ
 
         if op in ['+', '-', '*', '/']:
             if type(left) not in [IntType, FloatType] or type(right) not in [IntType, FloatType]:
                 raise TypeMismatchInExpression(ast)
             if type(left) is IntType and type(right) is IntType:
-                return Node(typ=IntType()), None
-            return Node(typ=FloatType()), None
+                return Node(typ=IntType()), category
+            return Node(typ=FloatType()), category
         elif op == '%':
             if type(left) is IntType and type(right) is IntType:
-                return Node(typ=IntType()), None
+                return Node(typ=IntType()), category
             raise TypeMismatchInExpression(ast)
         elif op in ['&&', '||']:
             if type(left) is BoolType and type(right) is BoolType:
-                return Node(typ=BoolType()), None
+                return Node(typ=BoolType()), category
             raise TypeMismatchInExpression(ast)
         elif op in ['==.', '+.']:
             if type(left) is not StringType or type(right) is not StringType:
                 raise TypeMismatchInExpression(ast)
             if op == '==.':
-                return Node(typ=BoolType()), None
-            return Node(typ=StringType()), None
+                return Node(typ=BoolType()), category
+            return Node(typ=StringType()), category
         elif op in ['==', '!=']:
             if type(left) not in [BoolType, IntType] or type(right) not in [BoolType, IntType]:
                 raise TypeMismatchInExpression(ast)
-            return Node(typ=BoolType()), None
+            return Node(typ=BoolType()), category
         elif op in ['<', '>', '<=', '>=']:
             if type(left) not in [FloatType, IntType] or type(right) not in [FloatType, IntType]:
                 raise TypeMismatchInExpression(ast)
-            return Node(typ=BoolType()), None
+            return Node(typ=BoolType()), category
 
     def visitUnaryOp(self, ast: UnaryOp, c):
-        exp = self.visit(ast.body, c)[0].typ
+        c = c[0] if type(c) is tuple else c
+        expr, category = self.visit(ast.body, (c, None, 'id'))[0].typ if type(ast.body) is Id else self.visit(ast.body, c)
+        expr = expr.typ
         op = ast.op
         if op == '-':
-            if type(exp) not in [IntType, FloatType]:
+            if type(expr) not in [IntType, FloatType]:
                 raise TypeMismatchInExpression(ast)
-            return (Node(typ=IntType()), None) if type(exp) is IntType else (Node(typ=FloatType()), None)
+            return (Node(typ=IntType()), category) if type(expr) is IntType else (Node(typ=FloatType()), category)
         if op in '!':
-            if type(exp) is not BoolType:
+            if type(expr) is not BoolType:
                 raise TypeMismatchInExpression(ast)
-            return Node(typ=BoolType()), None
+            return Node(typ=BoolType()), category
 
     def visitArrayCell(self, ast, c):
         # array is a variable: ex a[5]

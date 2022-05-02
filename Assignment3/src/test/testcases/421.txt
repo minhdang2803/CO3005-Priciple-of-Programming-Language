@@ -1,14 +1,8 @@
 
-                            Class B{
-                                Var b:Int = 1;
-                                c(){}
+                        Class C{
+                            e(){
+                                Var a:Int = 1+2;
+                                Var b:Float = 1+2.2;
+                                Var c:Float = 1+True;
                             }
-                            Class A{
-                                Var class_a:B;
-                            }
-                            Class C{
-                                e(){
-                                    Var a:A;
-                                    a.class_a.c = 2; ##Error here##
-                                }
-                            }
+                        }

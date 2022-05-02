@@ -1,15 +1,15 @@
 
-                            Class B{
-                                Var b:Int = 1;
-                                c(g:Int; h:Float){
-                                    Return 1;
-                                }
-                                d(){}
+                        Class B{
+                            Var b:Int = 1;
+                            c(g:Int; h:Float){
+                                Return 1;
                             }
-                            Class C{
-                                e(){
-                                    Var a:B;
-                                    Val d:Float = a.c(1,2);
-                                    Val e:String = a.c(1,2);
-                                }
+                            d(){}
+                        }
+                        Class C{
+                            e(){
+                                Val a:B = New B();
+                                Val d:Float = a.c(1,2);
+                                Val e:String = a.c(1,2);
                             }
+                        }

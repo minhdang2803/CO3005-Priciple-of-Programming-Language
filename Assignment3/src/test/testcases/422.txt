@@ -1,14 +1,8 @@
 
-                            Class B{
-                                a(){}
-                                c(){}
+                        Class C{
+                            e(){
+                                Var c:String = "abc" +. "def";
+                                Var d:Boolean = ("abc" +. "def") ==. "ghi";
+                                Var e:String = ("abc" ==. "def") +. "ghi";
                             }
-                            Class A{
-                                Var class_a:B;
-                            }
-                            Class C{
-                                e(){
-                                    Var a:A;
-                                    a.class_a.b(); ##Error here##
-                                }
-                            }
+                        }

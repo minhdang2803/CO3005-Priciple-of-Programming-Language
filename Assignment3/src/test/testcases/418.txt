@@ -1,7 +1,7 @@
 
-                            Class C{
-                                e(){
-                                    Val a:Int = 2;
-                                    a=3;
-                                }
+                        Class C{
+                            e(){
+                                Val a:Int = 2;
+                                a=3;
                             }
+                        }

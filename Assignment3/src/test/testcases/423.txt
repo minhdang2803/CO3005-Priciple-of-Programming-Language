@@ -1,13 +1,8 @@
 
-                            Class C{
-                                e(){
-                                    Return 12;
-                                }
+                        Class C{
+                            e(){
+                                Var c:Float = --------1.22;
+                                Var d:Boolean = !((("abc" +. "def") ==. "ghi") || False);
+                                Var e:Float = !!!!--1.22;
                             }
-                            Class B{
-                                b(){
-                                    Var a: C;
-                                    a.e();
-                                }
-                            }
-                            
+                        }
