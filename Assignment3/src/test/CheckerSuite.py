@@ -587,13 +587,6 @@ class CheckerSuite(unittest.TestCase):
     def test_451(self):
         """Simple program: int main() {} """
         input = """
-                        Class C{
-                            e(){
-                                Var a:Int = 0;
-                                Val b:Int = 1;
-                                Val c:Float = b+1;
-                            }
-                        }
                          Class Car {
 
                             Var a : Int = 10;

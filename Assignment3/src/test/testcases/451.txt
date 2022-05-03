@@ -1,11 +1,4 @@
 
-                        Class C{
-                            e(){
-                                Var a:Int = 0;
-                                Val b:Int = 1;
-                                Val c:Float = b+1;
-                            }
-                        }
                          Class Car {
 
                             Var a : Int = 10;
