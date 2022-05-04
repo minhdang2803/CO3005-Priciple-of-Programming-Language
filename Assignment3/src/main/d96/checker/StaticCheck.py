@@ -310,35 +310,22 @@ class StaticChecker(BaseVisitor, Utils):
     def visitAssign(self, ast, c):
         c = c[0] if type(c) is tuple else c
         # lhs is scala variable, c is a tuple
-        if type(ast.lhs) is Id:
-            lhs, category = self.visit(ast.lhs, (c, 'INST', 'id'))
-            if category == 'immutable': raise CannotAssignToConstant(ast)
-            if type(lhs.typ) is VoidType:
-                raise TypeMismatchInStatement(ast)
-            expr, expr_category = self.visit(ast.exp, c) if type(ast.exp) is not Id else self.visit(ast.exp, (c, None, 'id'))
-            if not c.checkType(lhs.typ, expr.typ):
-                raise TypeMismatchInStatement(ast)
+        lhs, category = self.visit(ast.lhs, (c, 'INST', 'id')) if type(ast.lhs) is Id else self.visit(ast.lhs,c)
+        expr, expr_category = self.visit(ast.exp, c) if type(ast.exp) is not Id else self.visit(ast.exp,(c, None, 'id'))
 
-        if type(ast.lhs) is FieldAccess:
-            lhs, category = self.visit(ast.lhs, c)
-            if category == 'immutable': raise CannotAssignToConstant(ast)
-            if type(lhs.typ) is VoidType:
+        if category == 'immutable': raise CannotAssignToConstant(ast)
+        if type(lhs.typ) is VoidType:
+            raise TypeMismatchInStatement(ast)
+        if type(lhs.typ) is not ArrayType and not c.checkType(lhs.typ, expr.typ):
+            raise TypeMismatchInStatement(ast)
+        if type(lhs.typ) is ArrayType and type(expr.typ) is not ArrayType:
+            if not c.checkType(lhs.typ.eleType, expr.typ):
                 raise TypeMismatchInStatement(ast)
-            expr, expr_category = self.visit(ast.exp, c) if type(ast.exp) is not Id else self.visit(ast.exp, (c, None, 'id'))
-            if not c.checkType(lhs.typ, expr.typ):
+        if type(lhs.typ) is ArrayType and type(expr.typ) is ArrayType:
+            if lhs.typ.size != expr.typ.size:
                 raise TypeMismatchInStatement(ast)
-
-        if type(ast.lhs) is ArrayCell:
-            exp, expr_category = self.visit(ast.exp, c) if type(ast.exp) is not Id else self.visit(ast.exp, (c, None, 'id'))
-            lhs, category = self.visit(ast.lhs, c)
-            if category == 'immutable': raise CannotAssignToConstant(ast)
-            # if type(lhs.typ) is not ArrayType and not c.checkType(lhs.typ, exp.typ):
-            #     raise TypeMismatchInStatement(ast)
-            if type(lhs.typ) is ArrayType and type(exp.typ) is ArrayType:
-                if lhs.size != exp.size:
-                    raise TypeMismatchInStatement(ast)
-                if not c.checkType(lhs.eleType, exp.eleType):
-                    raise TypeMismatchInStatement(ast)
+            if not c.checkType(lhs.typ.eleType, expr.typ.eleType):
+                raise TypeMismatchInStatement(ast)
         return
 
     def visitIf(self, ast, c):
