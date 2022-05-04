@@ -171,11 +171,12 @@ class Tree:
         if type(type_decl) is str and type(type_assign) is str:
             if type_decl == type_assign:
                 return True
+            elif not self.isInherit(type_decl) and not self.isInherit(type_assign):
+                return False
             else:
                 inherit_assign = self.getInheritClass(type_assign)[::-1]
-                if not self.isInherit(type_decl):
-                    if type_decl in inherit_assign[1:]:
-                        return False
+                if type_assign in inherit_assign[1:]:
+                    return False
                 else:
                     idx = inherit_assign.index(type_decl)
                     # inherit_assign = inherit_assign[:idx]
@@ -307,27 +308,33 @@ class StaticChecker(BaseVisitor, Utils):
         raise Redeclared(ret_type, name)
 
     def visitAssign(self, ast, c):
+        c = c[0] if type(c) is tuple else c
         # lhs is scala variable, c is a tuple
         if type(ast.lhs) is Id:
             lhs, category = self.visit(ast.lhs, (c, 'INST', 'id'))
             if category == 'immutable': raise CannotAssignToConstant(ast)
             if type(lhs.typ) is VoidType:
                 raise TypeMismatchInStatement(ast)
-            self.visit(ast.exp, (c,None,'id')) if type(ast.exp) is Id else self.visit(ast.exp,c)
+            expr, expr_category = self.visit(ast.exp, c) if type(ast.exp) is not Id else self.visit(ast.exp, (c, None, 'id'))
+            if not c.checkType(lhs.typ, expr.typ):
+                raise TypeMismatchInStatement(ast)
 
         if type(ast.lhs) is FieldAccess:
             lhs, category = self.visit(ast.lhs, c)
             if category == 'immutable': raise CannotAssignToConstant(ast)
-            if type(lhs) is VoidType:
+            if type(lhs.typ) is VoidType:
                 raise TypeMismatchInStatement(ast)
+            expr, expr_category = self.visit(ast.exp, c) if type(ast.exp) is not Id else self.visit(ast.exp, (c, None, 'id'))
+            if not c.checkType(lhs.typ, expr.typ):
+                raise TypeMismatchInStatement(ast)
+
         if type(ast.lhs) is ArrayCell:
-            exp, category = self.visit(ast.exp, c)
+            exp, expr_category = self.visit(ast.exp, c) if type(ast.exp) is not Id else self.visit(ast.exp, (c, None, 'id'))
             lhs, category = self.visit(ast.lhs, c)
-            if type(lhs) is VoidType:
-                raise TypeMismatchInStatement(ast)
-            if type(lhs) is not ArrayType and not c.checkType(lhs, exp):
-                raise TypeMismatchInStatement(ast)
-            if type(lhs) is ArrayType and type(exp) is ArrayType:
+            if category == 'immutable': raise CannotAssignToConstant(ast)
+            # if type(lhs.typ) is not ArrayType and not c.checkType(lhs.typ, exp.typ):
+            #     raise TypeMismatchInStatement(ast)
+            if type(lhs.typ) is ArrayType and type(exp.typ) is ArrayType:
                 if lhs.size != exp.size:
                     raise TypeMismatchInStatement(ast)
                 if not c.checkType(lhs.eleType, exp.eleType):
@@ -528,14 +535,15 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitArrayCell(self, ast, c):
         # array is a variable: ex a[5]
-        arr_type = self.visit(ast.arr, (c, None, 'id'))[0].typ
+        node_array, category = self.visit(ast.arr, (c, None, 'id'))
+        arr_type = node_array.typ
         idx_type = [self.visit(element, c)[0].typ for element in ast.idx]
         if type(arr_type) is not ArrayType:
             raise TypeMismatchInExpression(ast)
         for element in idx_type:
             if type(element) is not IntType:
                 raise TypeMismatchInExpression(ast)
-        return arr_type, None
+        return node_array, category
 
     def visitReturn(self, ast, c):
         node = None
@@ -570,7 +578,7 @@ class StaticChecker(BaseVisitor, Utils):
         value_list = [self.visit(element, c)[0].typ for element in ast.value]
         check_value = value_list[0]
         for element in value_list:
-            if c.checkType(check_value, element):
+            if not c.checkType(check_value, element):
                 raise IllegalArrayLiteral(ast)
         ret_type = ArrayType(len(value_list), check_value)
         return Node(typ=ret_type), None

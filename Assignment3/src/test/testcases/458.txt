@@ -1,0 +1,15 @@
+         
+                           Class A{
+                            Constructor(){}
+                               $a(){}
+                               b(){}
+                           }         
+                           Class B{
+                            Constructor(){}
+                           func(){
+                               A::$a();
+                               Var b:A = New A();
+                               b.b();
+                               A.b();
+                           }
+                           }

@@ -1,0 +1,7 @@
+         
+                           Class B{
+                           Constructor(){}
+                           func(){
+                               count.foo();
+                           }
+                           }

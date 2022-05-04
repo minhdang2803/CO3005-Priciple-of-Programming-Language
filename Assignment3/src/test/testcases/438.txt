@@ -1,5 +1,6 @@
 
                         Class B{
+                            Constructor(){}
                             Var b:Int = 1;
                             c(g:Int; h:Float){
                                 Return 1;
