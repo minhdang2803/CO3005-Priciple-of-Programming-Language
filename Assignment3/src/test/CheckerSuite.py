@@ -716,6 +716,50 @@ class CheckerSuite(unittest.TestCase):
         expect = "Type Mismatch In Statement: VarDecl(Id(d),IntType,BinaryOp(+,Id(a),Id(b)))"
         self.assertTrue(TestChecker.test(input, expect, 443))
 
+    def test_444(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class C{
+                            e(){
+                                Var a:Int = 1;
+                                Var b:Int = 1;
+                                If (True){
+                                    Var a:Int = 2;
+                                }
+                                Elseif(True){
+                                    Var a:Int = 2;
+                                }
+                                Else{
+                                    Var a:Int = 2;
+                                }
+                                Var b:Int = 2 ;
+                            }
+                        }"""
+        expect = "Redeclared Variable: b"
+        self.assertTrue(TestChecker.test(input, expect, 444))
+
+    def test_445(self):
+        """Simple program: int main() {} """
+        input = """
+                         Class C{
+                             e(){
+                                 Var a:Int = 1;
+                                 Var b:Int = 1;
+                                 Var i:Int = 0;
+                                 Foreach(i In 1 .. 10 By 1){
+                                     Var a:Int = 1;
+                                     Break;
+                                     If (True){
+                                         Var a:Int = 1;
+                                         Continue;
+                                     }
+                                 }
+                                 Var b:Int = 2 ;
+                             }
+                         }"""
+        expect = "Redeclared Variable: b"
+        self.assertTrue(TestChecker.test(input, expect, 445))
+
     def test_448(self):
         """Simple program: int main() {} """
         input = """
