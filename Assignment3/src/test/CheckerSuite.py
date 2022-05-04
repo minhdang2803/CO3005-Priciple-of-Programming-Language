@@ -485,6 +485,27 @@ class CheckerSuite(unittest.TestCase):
         expect = "Type Mismatch In Statement: VarDecl(Id(f),StringType,FieldAccess(Id(a),Id(b)))"
         self.assertTrue(TestChecker.test(input, expect, 431))
 
+    def test_432(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class B{
+                            Constructor(){}
+                            Var b:Int = 1;
+                            c(g:Int; h:Float){
+                                Return 1;
+                            }
+                            d(){
+                            }
+                        }
+                        Class C{
+                            e(){
+                                Val a:B = New B();
+                                Val d:Float = a.c(1,2);
+                                Val e:String = a.c(1,2);
+                            }
+                        }"""
+        expect = "Type Mismatch In Constant Declaration: ConstDecl(Id(e),StringType,CallExpr(Id(a),Id(c),[IntLit(1),IntLit(2)]))"
+        self.assertTrue(TestChecker.test(input, expect, 432))
 
     def test_433(self):
         """Simple program: int main() {} """
@@ -597,3 +618,26 @@ class CheckerSuite(unittest.TestCase):
                         }"""
         expect = "Undeclared Identifier: a"
         self.assertTrue(TestChecker.test(input, expect, 451))
+
+    def test_460(self):
+        """Simple program: int main() {} """
+        input = """         
+                        Class A{
+                            Constructor(){}
+                            $a(){
+                                Return 1;
+                            }
+                            b(){
+                                Return 1;
+                            }
+                        }         
+                        Class B{
+                        func(){
+                            Var b:A = New A();
+                            Var c:Int = A::$a();
+                            c = b.b();
+                            c = b::$a();
+                        }
+                        }"""
+        expect = "Illegal Member Access: CallExpr(Id(b),Id($a),[])"
+        self.assertTrue(TestChecker.test(input, expect, 460))
