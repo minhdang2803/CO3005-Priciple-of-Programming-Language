@@ -267,9 +267,6 @@ class StaticChecker(BaseVisitor, Utils):
             else:
                 if type(element) in [VarDecl, ConstDecl]:
                     self.visit(element, (c, 'INST', 'id'))
-                elif type(element) is Break:
-                    self.visit(element, c)
-                    return
                 else:
                     self.visit(element, c)
 
@@ -340,9 +337,10 @@ class StaticChecker(BaseVisitor, Utils):
         c.addBlock()
         self.visit(ast.thenStmt, c)
         c.current = c.current.parent
-        c.addBlock()
-        self.visit(ast.elseStmt, c)
-        c.current = c.current.parent
+        if ast.elseStmt:
+            c.addBlock()
+            self.visit(ast.elseStmt, c)
+            c.current = c.current.parent
         return
 
     def visitFor(self, ast, c):
@@ -355,24 +353,24 @@ class StaticChecker(BaseVisitor, Utils):
                                                                                                       (c, None, 'id'))
         expr3, category_expr3 = self.visit(ast.expr3, c) if type(ast.expr3) is not Id else self.visit(ast.expr3,
                                                                                                       (c, None, 'id'))
-        c.InLoof = c.current
         if category_scala == 'immutable':
             raise CannotAssignToConstant(ast)
         if type(expr1.typ) is not IntType or type(expr2.typ) is not IntType or type(scala) is not IntType:
             raise TypeMismatchInStatement(ast)
+        c.InLoof = True
         c.addBlock()
         self.visit(ast.loop, c)
-        c.InLoof = None
+        c.current = c.current.parent
+        c.InLoof = False
         return
 
     def visitBreak(self, ast, c):
-        c.current = c.InLoof
-        if c.InLoof is None:
+        if c.InLoof is False:
             raise MustInLoop
         return
 
     def visitContinue(self, ast, c):
-        if c.InLoof is None:
+        if c.InLoof is False:
             raise MustInLoop
         return
 
