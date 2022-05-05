@@ -1,4 +1,4 @@
-         
+
                         Class A{
                             Constructor(){}
                             $a(){
@@ -7,7 +7,7 @@
                             b(){
                                 Return 1;
                             }
-                        }         
+                        }
                         Class B{
                         func(){
                             Var b:A = New A();

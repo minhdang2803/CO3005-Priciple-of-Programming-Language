@@ -3,7 +3,7 @@
                            Constructor(){}
                                Var $a:Int = 5;
                                Var b:Int = 4;
-                           }         
+                           }
                            Class B{
                            func(){
                                Var b:Int = A::$a;

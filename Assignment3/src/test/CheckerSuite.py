@@ -13,8 +13,8 @@ class CheckerSuite(unittest.TestCase):
                         Var c:Int;
                     }
                     Class a{
-                    Var a:Int;
-                    Var a:Int;
+                        Var a:Int;
+                        Var a:Int;
                     }
                     Class b{}
                     Class d{}"""
@@ -840,7 +840,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_453(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                            Class B{
                            Constructor(){}
                            func(){
@@ -857,7 +857,7 @@ class CheckerSuite(unittest.TestCase):
                            Constructor(){}
                                Var $a:Int = 5;
                                Var b:Int = 4;
-                           }         
+                           }
                            Class B{
                            func(){
                                Var b:Int = A::$a;
@@ -869,12 +869,12 @@ class CheckerSuite(unittest.TestCase):
 
     def test_455(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                            Class A{
                            Constructor(){}
                                Var $a:Int = 5;
                                Var b:Int = 4;
-                           }         
+                           }
                            Class B{
                            func(){
                                Var b:Int = A::$a;
@@ -886,12 +886,12 @@ class CheckerSuite(unittest.TestCase):
 
     def test_456(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                            Class A{
                                 Constructor(){}
                                Var $a:Int = 5;
                                Var b:Int = 4;
-                           }         
+                           }
                            Class B{
                            func(){
                                Var b:A = New A();
@@ -904,12 +904,12 @@ class CheckerSuite(unittest.TestCase):
 
     def test_457(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                            Class A{
                                Constructor(){}
                                $a(){}
                                b(){}
-                           }         
+                           }
                            Class B{
                            func(){
                                A::$a();
@@ -923,12 +923,12 @@ class CheckerSuite(unittest.TestCase):
 
     def test_458(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                            Class A{
                             Constructor(){}
                                $a(){}
                                b(){}
-                           }         
+                           }
                            Class B{
                             Constructor(){}
                            func(){
@@ -943,16 +943,16 @@ class CheckerSuite(unittest.TestCase):
 
     def test_459(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                            Class A{
-                            Constructor(){}  
+                            Constructor(){}
                                $a(){
                                    Return 1;
                                }
                                b(){
                                    Return 1;
                                }
-                           }         
+                           }
                            Class B{
                            func(){
                                Var b:A = New A();
@@ -966,7 +966,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_460(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                         Class A{
                             Constructor(){}
                             $a(){
@@ -975,7 +975,7 @@ class CheckerSuite(unittest.TestCase):
                             b(){
                                 Return 1;
                             }
-                        }         
+                        }
                         Class B{
                         func(){
                             Var b:A = New A();
@@ -986,3 +986,89 @@ class CheckerSuite(unittest.TestCase):
                         }"""
         expect = "Illegal Member Access: CallExpr(Id(b),Id($a),[])"
         self.assertTrue(TestChecker.test(input, expect, 460))
+    def test_461(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class A{
+                            $a(){
+                                Return 1;
+                            }
+                            b(){
+                                Return 1;
+                            }
+                        } """
+        expect = "No Entry Point"
+        self.assertTrue(TestChecker.test(input, expect, 461))
+
+    def test_462(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class A{
+                            $a(){
+                                Return 1;
+                            }
+                            b(){
+                                Return 1;
+                            }
+                        }
+                        Class Program{
+                            c(){
+                                Return 1;
+                            }
+                        }"""
+        expect = "No Entry Point"
+        self.assertTrue(TestChecker.test(input, expect, 462))
+
+    def test_463(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class A{
+                            $a(){
+                                Return 1;
+                            }
+                            b(){
+                                Return 1;
+                            }
+                        }
+                        Class Program{
+                            $main(){
+                                Return 1;
+                            }
+                        }"""
+        expect = "No Entry Point"
+        self.assertTrue(TestChecker.test(input, expect, 463))
+
+    def test_464(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class A{
+                            $a(){
+                                Return 1;
+                            }
+                            b(){
+                                Return 1;
+                            }
+                        }
+                        Class Program{
+                            $main(a:Int){
+                            }
+                        }"""
+        expect = "No Entry Point"
+        self.assertTrue(TestChecker.test(input, expect, 464))
+
+    def test_465(self):
+        """Simple program: int main() {} """
+        input = """         
+                        Class A{
+                            $a(){
+                                Return 1;
+                            }
+                            b(){
+                                Return 1;
+                            }
+                        } 
+                        Class Program{
+                            main(){}
+                        }"""
+        expect = "No Entry Point"
+        self.assertTrue(TestChecker.test(input, expect, 465))

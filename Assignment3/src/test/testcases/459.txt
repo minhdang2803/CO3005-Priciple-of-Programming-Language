@@ -1,13 +1,13 @@
-         
+
                            Class A{
-                            Constructor(){}  
+                            Constructor(){}
                                $a(){
                                    Return 1;
                                }
                                b(){
                                    Return 1;
                                }
-                           }         
+                           }
                            Class B{
                            func(){
                                Var b:A = New A();

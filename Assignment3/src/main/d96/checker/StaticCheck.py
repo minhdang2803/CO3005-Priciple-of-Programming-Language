@@ -43,7 +43,7 @@ class ExpUtils:
 # Author of this structure: Le Thien An senpoi 🥺
 class Node:
     def __init__(self, name=None, typ=None, data=None, param=None, block=None, inherit=None, parent=None, kind=None,
-                 tag=None, isConst=None):
+                 tag=None, isConst=None, hasReturn = None):
         self.name = name
         self.typ = typ
         self.data = data
@@ -54,6 +54,7 @@ class Node:
         self.kind = kind
         self.tag = tag
         self.isConst = isConst
+        self.hasReturn = hasReturn
 
 
 class Tree:
@@ -88,6 +89,7 @@ class Tree:
 
     def addMethod(self, name, kind, class_type=None):
         if self.redeclared_check(name, self.current):
+            kind = 'Static' if name == 'main' else kind
             mptype = class_type if name == 'Constructor' or name == 'Destructor' else VoidType()
             new_node = Node(name=name, kind=kind, block=[], parent=self.current, tag='method', typ=mptype)
             self.current.block.append(new_node)
@@ -198,6 +200,14 @@ class Tree:
                     return True
         return False
 
+    def checkEntryPoint(self):
+        for node in self.head.block:
+            if node.name == 'Program':
+                for element in node.block:
+                    if element.name == 'main' and element.tag == 'method' and len(element.param) == 0 and type(element.typ) is VoidType and node.kind == 'Static':
+                        return True
+        return False
+
 
 class StaticChecker(BaseVisitor, Utils):
     global_envi = [Symbol("getInt", MType([], IntType())), Symbol("putIntLn", MType([IntType()], VoidType()))]
@@ -212,6 +222,8 @@ class StaticChecker(BaseVisitor, Utils):
         c = Tree()
         for decl in ast.decl:
             self.visit(decl, c)
+        if not c.checkEntryPoint():
+            raise NoEntryPoint()
 
     def visitClassDecl(self, ast, c):
         node_parent = None if ast.parentname is None else self.visit(ast.parentname, (c, 'INST', 'class'))[0].name
@@ -240,8 +252,7 @@ class StaticChecker(BaseVisitor, Utils):
             category = 'immutable'
         data = node_data.typ if node_data is not None else node_data
         if c.addAttribute(name, typ, data, kind, category):
-            node = c.searchAttr(name, c.current.name)
-            return node, category
+            return
         else:
             raise Redeclared(Attribute(), name)
 
@@ -285,8 +296,7 @@ class StaticChecker(BaseVisitor, Utils):
                 raise TypeMismatchInStatement(ast)
         # Adding the identifier
         if c[0].addVarOrConst(name, typ, data, kind, 'mutable'):
-            node = c[0].searchId(name, c[0].current)
-            return node, 'mutable'
+            return
         ret_type = Variable() if c[1] == 'INST' else Parameter()
         raise Redeclared(ret_type, name)
 
@@ -302,8 +312,7 @@ class StaticChecker(BaseVisitor, Utils):
             raise TypeMismatchInConstant(ast)
         # Adding the identifier
         if c[0].addVarOrConst(name, typ, data, kind, 'immutable'):
-            node = c[0].searchId(name, c[0].current)
-            return node, 'immutable'
+            return
         ret_type = Constant() if c[1] == 'INST' else Parameter()
         raise Redeclared(ret_type, name)
 
@@ -366,12 +375,12 @@ class StaticChecker(BaseVisitor, Utils):
 
     def visitBreak(self, ast, c):
         if c.InLoof is False:
-            raise MustInLoop
+            raise MustInLoop(ast)
         return
 
     def visitContinue(self, ast, c):
         if c.InLoof is False:
-            raise MustInLoop
+            raise MustInLoop(ast)
         return
 
     def visitId(self, ast, c):
