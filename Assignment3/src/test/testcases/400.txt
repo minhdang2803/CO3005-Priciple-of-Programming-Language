@@ -5,8 +5,8 @@
                         Var c:Int;
                     }
                     Class a{
-                        Var a:Int;
-                        Var a:Int;
+                    Var a:Int;
+                    Var a:Int;
                     }
                     Class b{}
                     Class d{}

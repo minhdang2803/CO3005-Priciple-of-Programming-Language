@@ -1,7 +1,6 @@
 
-                           Class B{
-                           Constructor(){}
-                           func(){
-                               count.foo();
-                           }
-                           }
+                        Class B{
+                        func(){
+                            count.foo();
+                        }
+                        }

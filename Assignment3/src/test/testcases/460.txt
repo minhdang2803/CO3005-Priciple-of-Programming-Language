@@ -1,6 +1,5 @@
 
                         Class A{
-                            Constructor(){}
                             $a(){
                                 Return 1;
                             }

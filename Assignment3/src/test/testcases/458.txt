@@ -1,15 +1,13 @@
 
-                           Class A{
-                            Constructor(){}
-                               $a(){}
-                               b(){}
-                           }
-                           Class B{
-                            Constructor(){}
-                           func(){
-                               A::$a();
-                               Var b:A = New A();
-                               b.b();
-                               A.b();
-                           }
-                           }
+                        Class A{
+                            $a(){}
+                            b(){}
+                        }
+                        Class B{
+                        func(){
+                            A::$a();
+                            Var b:A = New A();
+                            b.b();
+                            A.b();
+                        }
+                        }

@@ -2,7 +2,7 @@
  * @author nhphung
 """
 from StaticError import *
-from Utils import Utils
+# from Utils import Utils
 from Visitor import *
 
 
@@ -62,7 +62,7 @@ class Tree:
         self.head = Node(name='global', block=[])
         self.current = self.head
         self.Self = None
-        self.InLoof = None
+        self.InLoof = False
 
     def redeclared_check(self, var_name, node):
         for n in node.block:
@@ -111,7 +111,7 @@ class Tree:
 
     def searchObj(self, name, node):
         for n in node.block:
-            if n.name == name:
+            if n.name == name and (n.tag == 'class' or n.tag == 'id'):
                 return n
         if node.parent:
             return self.searchObj(name, node.parent)
@@ -141,14 +141,20 @@ class Tree:
                 return self.searchAttr(name, node.inherit)
         return None
 
-    def searchMethod(self, name, class_name):
+    def searchMethod(self, name, class_name, size=None):
         node = self.searchClass(class_name)
-        if node is not None:
+        if size is not None and node is not None:
+            for element in node.block:
+                if element.name == name and element.tag == 'method' and len(element.param) == size:
+                    return element
+                if node.inherit:
+                    return self.searchMethod(name, node.inherit, size)
+        if size is None and node is not None:
             for element in node.block:
                 if element.name == name and element.tag == 'method':
                     return element
             if node.inherit:
-                return self.searchMethod(name, node.inherit)
+                return self.searchMethod(name, node.inherit, size)
         return None
 
     def getInheritClass(self, class_name):
@@ -178,13 +184,12 @@ class Tree:
                 return False
             else:
                 inherit_assign = self.getInheritClass(type_assign)[::-1]
-                if type_assign in inherit_assign[1:]:
-                    return False
-                else:
-                    idx = inherit_assign.index(type_decl)
-                    # inherit_assign = inherit_assign[:idx]
-                    if type_decl in inherit_assign[:idx]:
+                type_assign_idx = inherit_assign.index(type_assign)
+                if type_decl in inherit_assign:
+                    if type_assign in inherit_assign[type_assign_idx:]:
                         return True
+                else:
+                    return False
         return type(type_decl) == type(type_assign)
 
     def checkIllegalAccess(self, node_obj, node_field_name, is_self):
@@ -209,7 +214,7 @@ class Tree:
         return False
 
 
-class StaticChecker(BaseVisitor, Utils):
+class StaticChecker(BaseVisitor):
     global_envi = [Symbol("getInt", MType([], IntType())), Symbol("putIntLn", MType([IntType()], VoidType()))]
 
     def __init__(self, ast):
@@ -237,20 +242,32 @@ class StaticChecker(BaseVisitor, Utils):
             raise Redeclared(Class(), ast.classname.name)
 
     def visitAttributeDecl(self, ast, c):
-        name = typ = node_data = kind = category = None
+        name = typ = node_data = kind = category = is_const =  None
         if type(ast.decl) is VarDecl:
             name = ast.decl.variable.name
             typ = self.visit(ast.decl.varType, c)[0].typ
-            node_data, category = self.visit(ast.decl.varInit, c) if ast.decl.varInit is not None else (None, None)
+            node_data, is_const = self.visit(ast.decl.varInit, c) if ast.decl.varInit is not None else (None, None)
             kind = 'Instance' if type(ast.kind) is Instance else 'Static'
             category = 'mutable'
         if type(ast.decl) is ConstDecl:
             name = ast.decl.constant.name
             typ = self.visit(ast.decl.constType, c)[0].typ
-            node_data, category = self.visit(ast.decl.value, c) if ast.decl.value is not None else (None, None)
+            node_data, is_const = self.visit(ast.decl.value, c) if ast.decl.value is not None else (None, None)
             kind = 'Instance' if type(ast.kind) is Instance else 'Static'
             category = 'immutable'
         data = node_data.typ if node_data is not None else node_data
+
+        if category == 'immutable':
+            if data is not None and is_const == 'mutable': raise IllegalConstantExpression(ast)
+            if not c.checkType(typ,data): raise TypeMismatchInStatement(ast)
+        else:
+            if data is not None and type(typ) is not str:
+                if not c.checkType(typ, data):
+                    raise TypeMismatchInStatement(ast)
+            if data is not None and type(typ) is str:
+                if type(data) is not NullLiteral:
+                    if not c.checkType(typ, data):
+                        raise TypeMismatchInStatement(ast)
         if c.addAttribute(name, typ, data, kind, category):
             return
         else:
@@ -278,8 +295,11 @@ class StaticChecker(BaseVisitor, Utils):
             else:
                 if type(element) in [VarDecl, ConstDecl]:
                     self.visit(element, (c, 'INST', 'id'))
+                elif c.current.name == 'Constructor' and type(element) is Return and element.expr is not None:
+                    raise TypeMismatchInStatement(ast)
                 else:
                     self.visit(element, c)
+        return
 
     # return (kind,name,'mutable',type)
     def visitVarDecl(self, ast, c):
@@ -292,8 +312,13 @@ class StaticChecker(BaseVisitor, Utils):
 
         # Check if type of data is not type of assigned value
         if data is not None and type(typ) is not str:
-            if type(typ) is not VoidType and not c[0].checkType(typ, data):
+            if not c[0].checkType(typ, data):
                 raise TypeMismatchInStatement(ast)
+        if data is not None and type(typ) is str:
+            if type(data) is not NullLiteral:
+                if not c[0].checkType(typ,data):
+                    raise TypeMismatchInStatement(ast)
+
         # Adding the identifier
         if c[0].addVarOrConst(name, typ, data, kind, 'mutable'):
             return
@@ -324,7 +349,7 @@ class StaticChecker(BaseVisitor, Utils):
                                                                                                 (c, None, 'id'))
 
         if category == 'immutable': raise CannotAssignToConstant(ast)
-        if type(lhs.typ) is VoidType:
+        if type(lhs.typ) is VoidType and expr.typ is not None:
             raise TypeMismatchInStatement(ast)
         if type(lhs.typ) is not ArrayType and not c.checkType(lhs.typ, expr.typ):
             raise TypeMismatchInStatement(ast)
@@ -460,7 +485,7 @@ class StaticChecker(BaseVisitor, Utils):
             if obj is None:
                 raise Undeclared(Identifier(), ast.obj.name)
         else:
-            node_obj, is_self = self.visit(ast.obj, c)
+            obj, is_self = self.visit(ast.obj, c)
         # Type of object must be Class
         if type(obj.typ) is not str:
             raise TypeMismatchInExpression(ast)
@@ -488,19 +513,20 @@ class StaticChecker(BaseVisitor, Utils):
     def visitNewExpr(self, ast, c):
         c = c[0] if type(c) is tuple else c
         class_name, category = self.visit(ast.classname, (c, None, 'class'))
-        node = c.searchMethod('Constructor', class_name.name)
-        if node is None:
-            raise Undeclared(Method(), 'Constructor')
-
-        if node.tag == 'method':
-            param = node.param
-            args = [self.visit(element, c)[0].typ for element in ast.param]
-            if len(param) < len(args):
-                raise TypeMismatchInExpression(ast)
-            for index in range(len(param)):
-                if not c.checkType(param[index], args[index]):
+        node = None
+        if len(ast.param) > 0:
+            node = c.searchMethod('Constructor', class_name.name, len(ast.param))
+            if node is None:
+                raise Undeclared(Method(), 'Constructor')
+            if node.tag == 'method':
+                param = node.param
+                args = [self.visit(element, c)[0].typ for element in ast.param]
+                if len(param) < len(args):
                     raise TypeMismatchInExpression(ast)
-        return node, node.isConst
+                for index in range(len(param)):
+                    if not c.checkType(param[index], args[index]):
+                        raise TypeMismatchInExpression(ast)
+        return (node, node.isConst) if node is not None else (class_name, 'immutable')
 
     def visitBinaryOp(self, ast: BinaryOp, c):
         c = c[0] if type(c) is tuple else c
