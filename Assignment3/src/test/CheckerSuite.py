@@ -230,7 +230,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_417(self):
         """Simple program: int main() {} """
-        input = """ 
+        input = """
                         Class B{
                             Var b:Int = 1;
                             c(){}
@@ -864,7 +864,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_453(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                         Class B{
                         func(){
                             count.foo();
@@ -879,7 +879,7 @@ class CheckerSuite(unittest.TestCase):
                         Class A{
                             Var $a:Int = 5;
                             Var b:Int = 4;
-                        }         
+                        }
                         Class B{
                         func(){
                             Var b:Int = A::$a;
@@ -891,11 +891,11 @@ class CheckerSuite(unittest.TestCase):
 
     def test_455(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                         Class A{
                             Var $a:Int = 5;
                             Var b:Int = 4;
-                        }         
+                        }
                         Class B{
                         func(){
                             Var b:Int = A::$a;
@@ -907,11 +907,11 @@ class CheckerSuite(unittest.TestCase):
 
     def test_456(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                         Class A{
                             Var $a:Int = 5;
                             Var b:Int = 4;
-                        }         
+                        }
                         Class B{
                         func(){
                             Var b:A = New A();
@@ -924,11 +924,11 @@ class CheckerSuite(unittest.TestCase):
 
     def test_457(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                         Class A{
                             $a(){}
                             b(){}
-                        }         
+                        }
                         Class B{
                         func(){
                             A::$a();
@@ -942,11 +942,11 @@ class CheckerSuite(unittest.TestCase):
 
     def test_458(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                         Class A{
                             $a(){}
                             b(){}
-                        }         
+                        }
                         Class B{
                         func(){
                             A::$a();
@@ -960,7 +960,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_459(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                         Class A{
                             $a(){
                                 Return 1;
@@ -968,7 +968,7 @@ class CheckerSuite(unittest.TestCase):
                             b(){
                                 Return 1;
                             }
-                        }         
+                        }
                         Class B{
                         func(){
                             Var b:A = New A();
@@ -982,7 +982,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_460(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                         Class A{
                             $a(){
                                 Return 1;
@@ -990,7 +990,7 @@ class CheckerSuite(unittest.TestCase):
                             b(){
                                 Return 1;
                             }
-                        }         
+                        }
                         Class B{
                         func(){
                             Var b:A = New A();
@@ -1004,7 +1004,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_461(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                         Class A{
                             $a(){
                                 Return 1;
@@ -1018,7 +1018,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_462(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                         Class A{
                             $a(){
                                 Return 1;
@@ -1026,7 +1026,7 @@ class CheckerSuite(unittest.TestCase):
                             b(){
                                 Return 1;
                             }
-                        } 
+                        }
                         Class Program{
                             c(){
                                 Return 1;
@@ -1037,7 +1037,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_463(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                         Class A{
                             $a(){
                                 Return 1;
@@ -1045,7 +1045,7 @@ class CheckerSuite(unittest.TestCase):
                             b(){
                                 Return 1;
                             }
-                        } 
+                        }
                         Class Program{
                             $main(){
                                 Return 1;
@@ -1056,7 +1056,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_464(self):
         """Simple program: int main() {} """
-        input = """         
+        input = """
                         Class A{
                             $a(){
                                 Return 1;
@@ -1064,7 +1064,7 @@ class CheckerSuite(unittest.TestCase):
                             b(){
                                 Return 1;
                             }
-                        } 
+                        }
                         Class Program{
                             $main(a:Int){
                             }
@@ -1084,7 +1084,7 @@ class CheckerSuite(unittest.TestCase):
                             }
                         } 
                         Class Program{
-                            main(){}
+                            main(a:Int){}
                         }"""
         expect = "No Entry Point"
         self.assertTrue(TestChecker.test(input, expect, 465))
@@ -1114,7 +1114,7 @@ class CheckerSuite(unittest.TestCase):
                             Val z:Int=Self.x.y;
                         }
                         } """
-        expect = "Illegal Constant Expression: FieldAccess(FieldAccess(Self(),Id(x)),Id(y))"
+        expect = "No Entry Point"
         self.assertTrue(TestChecker.test(input, expect, 467))
 
     def test_468(self):

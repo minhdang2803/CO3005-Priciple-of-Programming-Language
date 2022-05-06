@@ -72,7 +72,7 @@ class Tree:
 
     def addMethod(self, name, kind, class_type=None):
         if self.redeclared_check(name, self.current):
-            kind = 'Static' if name == 'main' else kind
+            kind = 'Static' if name == 'main' and self.current.name == "Program" else kind
             mptype = class_type if name == 'Constructor' or name == 'Destructor' else VoidType()
             new_node = Node(name=name, kind=kind, block=[], parent=self.current, tag='method', typ=mptype)
             self.current.block.append(new_node)
@@ -160,6 +160,9 @@ class Tree:
     def checkType(self, type_decl, type_assign):
         if type(type_decl) is FloatType and type(type_assign) in [FloatType, IntType]:
             return True
+        if type(type_decl) is ArrayType and type(type_assign) is ArrayType:
+            if type(type_decl.eleType) is not type(type_assign.eleType):
+                return False
         if type(type_decl) is str and type(type_assign) is str:
             if type_decl == type_assign:
                 return True
@@ -192,7 +195,7 @@ class Tree:
         for node in self.head.block:
             if node.name == 'Program':
                 for element in node.block:
-                    if element.name == 'main' and element.tag == 'method' and len(element.param) == 0 and type(element.typ) is VoidType and node.kind == 'Static':
+                    if element.name == 'main' and element.tag == 'method' and len(element.param) == 0 and type(element.typ) is VoidType and element.kind == 'Static':
                         return True
         return False
 
@@ -301,7 +304,6 @@ class StaticChecker(BaseVisitor):
             if type(data) is not NullLiteral:
                 if not c[0].checkType(typ,data):
                     raise TypeMismatchInStatement(ast)
-
         # Adding the identifier
         if c[0].addVarOrConst(name, typ, data, kind, 'mutable'):
             return
@@ -316,8 +318,12 @@ class StaticChecker(BaseVisitor):
         data = node_data.typ if node_data is not None else node_data
         if data is None or category == 'mutable':
             raise IllegalConstantExpression(ast.value)
-        if not c[0].checkType(typ, data):
-            raise TypeMismatchInConstant(ast)
+        if data is not None and type(typ) is not str:
+            if not c[0].checkType(typ, data):
+                raise TypeMismatchInConstant(ast)
+        # if type(data) is ArrayType and type(typ) is ArrayType:
+        #     if not c.checktype(typ.eleType, data.eleType):
+        #         raise TypeMismatchInConstant(ast)
         # Adding the identifier
         if c[0].addVarOrConst(name, typ, data, kind, 'immutable'):
             return

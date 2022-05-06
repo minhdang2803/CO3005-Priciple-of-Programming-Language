@@ -1,17 +1,14 @@
 
-                            Class B{
-                                Var b:Int = 1;
-                                Val c:Int = 2;
-                            }
-                            Class A{
-                                class_a(){
-                                    Var a : B;
-                                    Return a;
-                                }
-                            }
-                            Class C{
-                                e(){
-                                    Var a:A;
-                                    a.class_a().c = 3; ##Error here##
-                                }
-                            }
+                    Class B{
+                        Var a:Float = 12;
+                        $c(){
+                            Return 11.2;
+                        }
+                    }
+                    Class A{
+                        b(){
+                            Var class_name:B = New B();
+                            Var b:Int = 1;
+                            b = B::$c();
+                        }
+                    }

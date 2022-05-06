@@ -1,1 +1,1 @@
-Cannot Assign To Constant: AssignStmt(FieldAccess(CallExpr(Id(a),Id(class_a),[]),Id(c)),IntLit(3))
+Type Mismatch In Statement: AssignStmt(Id(b),CallExpr(Id(B),Id($c),[]))
