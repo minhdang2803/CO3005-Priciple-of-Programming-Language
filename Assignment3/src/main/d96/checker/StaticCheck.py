@@ -416,7 +416,10 @@ class StaticChecker(BaseVisitor):
         if type(ast.obj) is Id:
             obj = c.searchObj(ast.obj.name, c.current)
             if obj is None:
-                raise Undeclared(Identifier(), ast.obj.name)
+                if '$' not in ast.fieldname.name:
+                    raise Undeclared(Identifier(), ast.obj.name)
+                else:
+                    raise Undeclared(Class(), ast.obj.name)
         elif type(ast.obj) is SelfLiteral:
             obj, is_self = self.visit(ast.obj, c)
         else:
@@ -439,7 +442,10 @@ class StaticChecker(BaseVisitor):
         if type(ast.obj) is Id:
             obj = c.searchObj(ast.obj.name, c.current)
             if obj is None:
-                raise Undeclared(Identifier(), ast.obj.name)
+                if '$' not in ast.method.name:
+                    raise Undeclared(Identifier(), ast.obj.name)
+                else:
+                    raise Undeclared(Class(), ast.obj.name)
         elif type(ast.obj) is SelfLiteral:
             obj, is_self = self.visit(ast.obj, c)
         else:
@@ -475,7 +481,10 @@ class StaticChecker(BaseVisitor):
         if type(ast.obj) is Id:
             obj = c.searchObj(ast.obj.name, c.current)
             if obj is None:
-                raise Undeclared(Identifier(), ast.obj.name)
+                if '$' not in ast.method.name:
+                    raise Undeclared(Identifier(), ast.obj.name)
+                else:
+                    raise Undeclared(Class(), ast.obj.name)
         elif type(ast.obj) is SelfLiteral:
             obj, is_self = self.visit(ast.obj, c)
         else:
@@ -579,8 +588,7 @@ class StaticChecker(BaseVisitor):
 
     def visitUnaryOp(self, ast: UnaryOp, c):
         c = c[0] if type(c) is tuple else c
-        expr, category = self.visit(ast.body, (c, None, 'id'))[0].typ if type(ast.body) is Id else self.visit(ast.body,
-                                                                                                              c)
+        expr, category = self.visit(ast.body, (c, None, 'id')) if type(ast.body) is Id else self.visit(ast.body, c)
         expr = expr.typ
         op = ast.op
         if op == '-':
