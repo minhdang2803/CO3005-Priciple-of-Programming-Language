@@ -2595,7 +2595,7 @@ class CheckerSuite(unittest.TestCase):
                             Val z:Int=Self.x.y;
                         }
                         } """
-        expect = "No Entry Point"
+        expect = "Illegal Constant Expression: FieldAccess(FieldAccess(Self(),Id(x)),Id(y))"
         self.assertTrue(TestChecker.test(input, expect, 467))
 
     def test_468(self):

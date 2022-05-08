@@ -334,16 +334,18 @@ class StaticChecker(BaseVisitor):
         name = ast.constant.name
         kind = 'Static' if '$' in name else 'Instance'
         typ = self.visit(ast.constType, c)[0].typ
-        node_data, category = self.visit(ast.value, c) if ast.value is not None else (None, None)
+        node_data = category = None
+        # node_data, category = self.visit(ast.value, c) if ast.value is not None else (None, None)
+        if type(ast.value) is FieldAccess:
+            node_data, category = self.visit(ast.value, (c[0], 'Const')) if ast.value is not None else (None, None)
+        else:
+            node_data, category = self.visit(ast.value, c) if ast.value is not None else (None, None)
         data = node_data.typ if node_data is not None else node_data
         if data is None or category == 'mutable' or ExpUtils.isNotConst(ast.value):
             raise IllegalConstantExpression(ast.value)
         if data is not None and type(typ) is not str:
             if not c[0].checkType(typ, data):
                 raise TypeMismatchInConstant(ast)
-        # if type(data) is ArrayType and type(typ) is ArrayType:
-        #     if not c.checktype(typ.eleType, data.eleType):
-        #         raise TypeMismatchInConstant(ast)
         # Adding the identifier
         if c[0].addVarOrConst(name, typ, data, kind, 'immutable'):
             return
@@ -431,7 +433,11 @@ class StaticChecker(BaseVisitor):
 
     # object.fieldname
     def visitFieldAccess(self, ast, c):
-        c = c[0] if type(c) is tuple else c
+        is_val = None
+        if type(c) is tuple:
+            is_val = c[1]
+            c = c[0]
+        # c = c[0] if type(c) is tuple else c
         obj = is_self = category = None
         if type(ast.obj) is Id:
             obj = c.searchObj(ast.obj.name, c.current)
@@ -452,6 +458,10 @@ class StaticChecker(BaseVisitor):
         node = c.searchAttr(ast.fieldname.name, typ)
         if node is None:
             raise Undeclared(Attribute(), ast.fieldname.name)
+        # check if immutable for Constdecl:
+        if is_val == 'Const':
+            if category == 'mutable':
+                raise IllegalConstantExpression(ast)
         # check Illegal Access Member
         if not c.checkIllegalAccess(obj, node, is_self):
             raise IllegalMemberAccess(ast)
