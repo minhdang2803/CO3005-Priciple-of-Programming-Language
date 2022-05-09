@@ -194,7 +194,7 @@ class Tree:
                         return True
                 else:
                     return False
-        return type(type_decl) == type(type_assign)
+        return type(type_decl) is type(type_assign)
 
     def checkIllegalAccess(self, node_obj, node_field_name, is_self):
         if is_self is not None:
@@ -643,7 +643,12 @@ class StaticChecker(BaseVisitor):
         for element in idx_type:
             if type(element) is not IntType:
                 raise TypeMismatchInExpression(ast)
-        return node_array, category
+        target_element, target_category = self.visit(arr_type.eleType, c)
+        length = range(len(ast.idx)-1)
+        for element in length:
+            if type(target_element.typ) is ArrayType:
+                target_element, target_category = self.visit(target_element.typ.eleType, c)
+        return target_element, category
 
     def visitReturn(self, ast, c):
         node = category = None
