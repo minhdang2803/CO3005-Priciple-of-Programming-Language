@@ -39,7 +39,7 @@ class CheckerSuite(unittest.TestCase):
     Var a:Int;
     a(){}
 }"""
-        expect = "Redeclared Method: a"
+        expect = "No Entry Point"
         self.assertTrue(TestChecker.test(input,expect,403))
 
     def test_404(self):
@@ -230,7 +230,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_417(self):
         """Simple program: int main() {} """
-        input = """
+        input = """ 
                         Class B{
                             Var b:Int = 1;
                             c(){}
@@ -671,7 +671,7 @@ class CheckerSuite(unittest.TestCase):
                                 y = New B();
                             }
                         }"""
-        expect = "Type Mismatch In Statement: AssignStmt(Id(y),NewExpr(Id(B),[]))"
+        expect = "Type Mismatch In Statement: AssignStmt(Id(x),NewExpr(Id(A),[]))"
         self.assertTrue(TestChecker.test(input, expect, 441))
 
     def test_442(self):
@@ -864,7 +864,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_453(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class B{
                         func(){
                             count.foo();
@@ -879,7 +879,7 @@ class CheckerSuite(unittest.TestCase):
                         Class A{
                             Var $a:Int = 5;
                             Var b:Int = 4;
-                        }
+                        }         
                         Class B{
                         func(){
                             Var b:Int = A::$a;
@@ -891,11 +891,11 @@ class CheckerSuite(unittest.TestCase):
 
     def test_455(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                             Var $a:Int = 5;
                             Var b:Int = 4;
-                        }
+                        }         
                         Class B{
                         func(){
                             Var b:Int = A::$a;
@@ -907,11 +907,11 @@ class CheckerSuite(unittest.TestCase):
 
     def test_456(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                             Var $a:Int = 5;
                             Var b:Int = 4;
-                        }
+                        }         
                         Class B{
                         func(){
                             Var b:A = New A();
@@ -924,11 +924,11 @@ class CheckerSuite(unittest.TestCase):
 
     def test_457(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                             $a(){}
                             b(){}
-                        }
+                        }         
                         Class B{
                         func(){
                             A::$a();
@@ -942,11 +942,11 @@ class CheckerSuite(unittest.TestCase):
 
     def test_458(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                             $a(){}
                             b(){}
-                        }
+                        }         
                         Class B{
                         func(){
                             A::$a();
@@ -960,7 +960,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_459(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                             $a(){
                                 Return 1;
@@ -968,7 +968,7 @@ class CheckerSuite(unittest.TestCase):
                             b(){
                                 Return 1;
                             }
-                        }
+                        }         
                         Class B{
                         func(){
                             Var b:A = New A();
@@ -982,7 +982,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_460(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                             $a(){
                                 Return 1;
@@ -990,7 +990,7 @@ class CheckerSuite(unittest.TestCase):
                             b(){
                                 Return 1;
                             }
-                        }
+                        }         
                         Class B{
                         func(){
                             Var b:A = New A();
@@ -1004,7 +1004,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_461(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                             $a(){
                                 Return 1;
@@ -1018,7 +1018,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_462(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                             $a(){
                                 Return 1;
@@ -1026,7 +1026,7 @@ class CheckerSuite(unittest.TestCase):
                             b(){
                                 Return 1;
                             }
-                        }
+                        } 
                         Class Program{
                             c(){
                                 Return 1;
@@ -1037,7 +1037,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_463(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                             $a(){
                                 Return 1;
@@ -1045,7 +1045,7 @@ class CheckerSuite(unittest.TestCase):
                             b(){
                                 Return 1;
                             }
-                        }
+                        } 
                         Class Program{
                             $main(){
                                 Return 1;
@@ -1056,7 +1056,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_464(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                             $a(){
                                 Return 1;
@@ -1064,7 +1064,7 @@ class CheckerSuite(unittest.TestCase):
                             b(){
                                 Return 1;
                             }
-                        }
+                        } 
                         Class Program{
                             $main(a:Int){
                             }
@@ -1074,7 +1074,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_465(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                             $a(){
                                 Return 1;
@@ -1082,7 +1082,7 @@ class CheckerSuite(unittest.TestCase):
                             b(){
                                 Return 1;
                             }
-                        }
+                        } 
                         Class Program{
                             main(a:Int){}
                         }"""
@@ -1091,7 +1091,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_466(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                             Var a:Int = 1;
                             foo(){
@@ -1104,7 +1104,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_467(self):
         """Simple program: int main() {} """
-        input = """
+        input = """         
                         Class A{
                         Val y:Int=10;
                         }
@@ -1119,7 +1119,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_468(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class B{
                         Var x:Int = 1;
                         foo(){
@@ -1136,7 +1136,7 @@ class CheckerSuite(unittest.TestCase):
 
     def test_469(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class B{
                         Var x:Int = 1;
                         foo(){
@@ -1153,65 +1153,65 @@ class CheckerSuite(unittest.TestCase):
 
     def test_470(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class E {
-                           func() {
-                           }
-                        }
-                        Class Test{
-                          test() {
-                                Var e: E = New E();
-                                Return e.func;
-                          }
+                           func() {                        
+                           }                        
+                        }                        
+                        Class Test{                        
+                          test() {                        
+                                Var e: E = New E();                        
+                                Return e.func;                       
+                          }                        
                         } """
         expect = "Undeclared Attribute: func"
         self.assertTrue(TestChecker.test(input, expect, 470))
 
     def test_471(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class E {
-                           func() {
-                           }
+                           func() {                        
+                           } 
                            Constructor(a:Int){
-                           }
-                        }
-                        Class Test{
-                          Var e: E = New E(1);
-                          Var b: E = New E();
+                           }                       
+                        }                        
+                        Class Test{                        
+                          Var e: E = New E(1);              
+                          Var b: E = New E();                                
                         } """
         expect = "Type Mismatch In Expression: NewExpr(Id(E),[])"
         self.assertTrue(TestChecker.test(input, expect, 471))
 
     def test_472(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class E {
-                           func() {
-                           }
+                           func() {                        
+                           } 
                            Constructor(a:Int){
-                           }
-                        }
-                        Class Test{
-                          Var e: E = New E(1);
-                          Val b: String = New E(1);
+                           }                       
+                        }                        
+                        Class Test{                        
+                          Var e: E = New E(1);              
+                          Val b: String = New E(1);                                
                         } """
-        expect = "Type Mismatch In Statement: AttributeDecl(Instance,ConstDecl(Id(b),StringType,NewExpr(Id(E),[IntLit(1)])))"
+        expect = "Type Mismatch In Statement: ConstDecl(Id(b),StringType,NewExpr(Id(E),[IntLit(1)]))"
         self.assertTrue(TestChecker.test(input, expect, 472))
 
     def test_473(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class E {
-                           $func() {
-                           }
+                           $func() {                        
+                           } 
                            Constructor(a:Int){
-                           }
-                        }
-                        Class Test{
-                            cak(){
-                                E::$func();
-                                E::$foo();
+                           }                       
+                        }                        
+                        Class Test{ 
+                            cak(){                     
+                                E::$func();   
+                                E::$foo();                             
                             }
                         }"""
         expect = "Undeclared Method: $foo"
@@ -1219,18 +1219,18 @@ class CheckerSuite(unittest.TestCase):
 
     def test_474(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class E {
-                           $func() {
-                                Return 1;
-                           }
+                           $func() { 
+                                Return 1;                       
+                           } 
                            Constructor(a:Int){
-                           }
-                        }
-                        Class Test{
-                            cak(){
-                                Var a:Int = E::$func();
-                                Var b:Int = E::$foo();
+                           }                       
+                        }                        
+                        Class Test{ 
+                            cak(){                     
+                                Var a:Int = E::$func();   
+                                Var b:Int = E::$foo();                             
                             }
                         }"""
         expect = "Undeclared Method: $foo"
@@ -1238,12 +1238,12 @@ class CheckerSuite(unittest.TestCase):
 
     def test_475(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
-                           Var a:Int = 1;
-                        }
-                        Class B{
-                            Var b:A = New A();
+                           Var a:Int = 1;                      
+                        }                        
+                        Class B{ 
+                            Var b:A = New A(); 
                         }
                         Class C{
                             foo(){
@@ -1257,12 +1257,12 @@ class CheckerSuite(unittest.TestCase):
 
     def test_476(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
-                           Var a:Int = 1;
-                        }
-                        Class B{
-                            Var b:A = New A();
+                           Var a:Int = 1;                      
+                        }                        
+                        Class B{ 
+                            Var b:A = New A(); 
                         }
                         Class C{
                             foo(){
@@ -1276,12 +1276,12 @@ class CheckerSuite(unittest.TestCase):
 
     def test_477(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
-                           Var a:Int = 1;
-                        }
-                        Class B{
-                            Var $b:A = New A();
+                           Var a:Int = 1;                      
+                        }                        
+                        Class B{ 
+                            Var $b:A = New A(); 
                         }
                         Class C{
                             foo(){
@@ -1295,12 +1295,12 @@ class CheckerSuite(unittest.TestCase):
 
     def test_478(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
-                           Var a:Int = 1;
-                        }
-                        Class B{
-                            Var $b:A = New A();
+                           Var a:Int = 1;                      
+                        }                        
+                        Class B{ 
+                            Var $b:A = New A(); 
                         }
                         Class C{
                             foo(){
@@ -1314,14 +1314,14 @@ class CheckerSuite(unittest.TestCase):
 
     def test_479(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            Var a:Int = 1;
                            foo(){
                                 Return 1;
-                           }
-                        }
-                        Class B{
+                           }                      
+                        }                        
+                        Class B{ 
                             Var b:A = New A();
                             foo(){
                                 Return New A();
@@ -1342,13 +1342,13 @@ class CheckerSuite(unittest.TestCase):
 
     def test_480(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            Var a:Int = 1;
                            foo(x:Float; y:String){
-                           }
-                        }
-                        Class B{
+                           }                      
+                        }                        
+                        Class B{ 
                             Var b:A = New A();
                             foo(){
                                 Return New A();
@@ -1367,15 +1367,15 @@ class CheckerSuite(unittest.TestCase):
 
     def test_481(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            Var a:Int = 1;
                            fooExp(x:Float; y:String){
                                 Return 1;
-                           }
-                           fooCall(x:Float; y:String){}
-                        }
-                        Class B{
+                           }  
+                           fooCall(x:Float; y:String){}                    
+                        }                        
+                        Class B{ 
                             Var b:A = New A();
                             foo(){
                                 Return New A();
@@ -1395,15 +1395,15 @@ class CheckerSuite(unittest.TestCase):
 
     def test_482(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            Var a:Int = 1;
                            fooExp(x:Float; y:String){
                                 Return 1;
-                           }
-                           fooCall(x:Float; y:String){}
-                        }
-                        Class B{
+                           }  
+                           fooCall(x:Float; y:String){}                    
+                        }                        
+                        Class B{ 
                             Var b:A = New A();
                             foo(){
                                 Return New A();
@@ -1423,19 +1423,19 @@ class CheckerSuite(unittest.TestCase):
 
     def test_483(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            Var a:Int = 1;
                            $fooExp1(x:Float; y:String){
                                 Return Self.a;
-                           }
+                           } 
                            $fooExp2(x:Float; y:String){
                                 Return x;
-                           }
+                           }  
                            $fooExp3(x:Float; y:String){
                                 Return y;
-                           }
-                        }
+                           }               
+                        }                        
                         Class B{
                             foo2(){
                                 Var e:Float = (New A()).a;
@@ -1450,19 +1450,19 @@ class CheckerSuite(unittest.TestCase):
 
     def test_484(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            Var a:Int = 1;
                            $fooExp1(x:Float; y:String){
                                 Return Self.a;
-                           }
+                           } 
                            $fooExp2(x:Float; y:String){
                                 Return x;
-                           }
+                           }  
                            $fooExp3(x:Float; y:String){
                                 Return y;
-                           }
-                        }
+                           }               
+                        }                        
                         Class BB{
                             foo2(){
                                 Var e:Float = (New A()).a - 7;
@@ -1477,111 +1477,220 @@ class CheckerSuite(unittest.TestCase):
 
     def test_485(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            $fooExp1(x:Float; y:String){
                                 Var a:Array[Int, 2] = Array(1,1);
                                 a = Array(1,1,1);
-                           }
+                           }               
                         }"""
         expect = "Type Mismatch In Statement: AssignStmt(Id(a),[IntLit(1),IntLit(1),IntLit(1)])"
         self.assertTrue(TestChecker.test(input, expect, 485))
 
     def test_486(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            $fooExp1(x:Float; y:String){
                                 Var a:Array[Int, 2] = Array(1,1);
                                 a = Array("a", "b");
-                           }
+                           }               
                         }"""
         expect = "Type Mismatch In Statement: AssignStmt(Id(a),[StringLit(a),StringLit(b)])"
         self.assertTrue(TestChecker.test(input, expect, 486))
 
     def test_487(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            $fooExp1(x:Float; y:String){
                                 Var a: Array[Array[Int, 2],2] = Array(Array(1,1),Array(1,1));
                                 Var b: Array[Array[Int, 2],2] = Array(Array(1,1),Array(1));
-                           }
+                           }               
                         }"""
         expect = "Illegal Array Literal: [[IntLit(1),IntLit(1)],[IntLit(1)]]"
         self.assertTrue(TestChecker.test(input, expect, 487))
 
     def test_488(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            $fooExp1(x:Float; y:String){
                                 Var a: Array[Array[Int, 2],2] = Array(Array(1,1),Array(1,1));
                                 Var b: Array[Array[Int, 2],2] = Array(Array("a","a"),Array("a","abc"));
-                           }
+                           }               
                         }"""
         expect = "Type Mismatch In Statement: VarDecl(Id(b),ArrayType(2,ArrayType(2,IntType)),[[StringLit(a),StringLit(a)],[StringLit(a),StringLit(abc)]])"
         self.assertTrue(TestChecker.test(input, expect, 488))
 
     def test_489(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            $fooExp1(x:Float; y:String){
                                 Var a: Array[Array[Int, 2],2] = Array(Array(1,1),Array(1,1,"a"));
-                           }
+                           }               
                         }"""
-        expect = "Illegal Array Literal: [IntLit(1),IntLit(1),StringLit(a)]"
+        expect = "Illegal Array Literal: [[IntLit(1),IntLit(1)],[IntLit(1),IntLit(1),StringLit(a)]]"
         self.assertTrue(TestChecker.test(input, expect, 489))
 
     def test_490(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            $fooExp1(){
                                 Var a: Array[Array[Int, 2],2] = Array(Array(1,1),Array(1,1));
                                 a[1] = Array(1,1);
                                 a[1][1] = 1;
                                 a = 1;
-                           }
+                           }               
                         }"""
         expect = "Type Mismatch In Statement: AssignStmt(Id(a),IntLit(1))"
         self.assertTrue(TestChecker.test(input, expect, 490))
 
     def test_491(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                            $fooExp1(){
                                 Val a: Array[Array[Int, 2],2] = Array(Array(1,1),Array(1,1));
                                 a[1] = Array(1,1);
-                           }
+                           }               
                         }"""
         expect = "Cannot Assign To Constant: AssignStmt(ArrayCell(Id(a),[IntLit(1)]),[IntLit(1),IntLit(1)])"
         self.assertTrue(TestChecker.test(input, expect, 491))
 
     def test_492(self):
         """Simple program: int main() {} """
-        input = """
+        input = """     
                         Class A {
                         Val a:Int = 2;
                            $fooExp1(){
                                 Self.a = "abc";
-                           }
+                           }               
                         }"""
         expect = "Cannot Assign To Constant: AssignStmt(FieldAccess(Self(),Id(a)),StringLit(abc))"
         self.assertTrue(TestChecker.test(input, expect, 492))
 
     def test_493(self):
-        """Simple program: int main() {} """
-        input = """     
-                        Class A {
-                           $fooExp1(){
-                                Var a: Array[Array[Array[Int, 2],2],2] = Array(Array(Array(1,1),Array(1,1)),Array(Array(1,1),Array(1,1)));
-                                a[1][1][1] = 1;
-                                a = 1;
-                           }               
-                        }"""
-        expect = "Type Mismatch In Statement: AssignStmt(Id(a),IntLit(1))"
+        input = """
+                Class A {
+
+                    Var $myArray: Array[Array[Array[Int,4],2],2] = Array(
+                        Array(
+                            Array(1,2,3,4),
+                            Array(5,6,7,8)
+                        ),
+                        Array(
+                            Array(-1,-2,-3,-4),
+                            Array(-5,-6,-7, False)
+                        )
+                    );
+
+                }
+            """
+        expect = "Illegal Array Literal: [[[IntLit(1),IntLit(2),IntLit(3),IntLit(4)],[IntLit(5),IntLit(6),IntLit(7),IntLit(8)]],[[UnaryOp(-,IntLit(1)),UnaryOp(-,IntLit(2)),UnaryOp(-,IntLit(3)),UnaryOp(-,IntLit(4))],[UnaryOp(-,IntLit(5)),UnaryOp(-,IntLit(6)),UnaryOp(-,IntLit(7)),BooleanLit(False)]]]"
         self.assertTrue(TestChecker.test(input, expect, 493))
+
+    def test_494(self):
+        input = """
+                Class A {
+
+                    foo() {
+                        Var a: Array[Int, 3] = Array(1,2,3);
+                        a[4] = 5; ## Index out of bound ##
+                        a[1][2] = 4; ## Error with dimension##
+                    }
+                }
+            """
+        expect = "Type Mismatch In Expression: ArrayCell(Id(a),[IntLit(1),IntLit(2)])"
+        self.assertTrue(TestChecker.test(input, expect, 494))
+
+    def test_495(self):
+        # NOTE: This case check for param compatiblity of Constructor
+        input = """
+                        Class Student
+                        {
+                            Var name: String;
+                            Var ID: Int;
+                            Constructor(newName: String; newID : Int)
+                            {
+                                Self.name = newName;
+                                Self.ID = newID;
+                            }
+                        }
+                        Class Program
+                        {
+                            main()
+                            {
+                                Var myStudent: Student = New Student ();
+                            }
+                        }
+            """
+
+        expect = "Type Mismatch In Expression: NewExpr(Id(Student),[])"
+        self.assertTrue(TestChecker.test(input, expect, 495))
+
+    def test_496(self):
+        input = """
+                        Class A
+                        {
+                        }
+                        Class B:A
+                        {
+                            Var a: A = New C();
+                        }
+            """
+
+        expect = "Undeclared Class: C"
+        self.assertTrue(TestChecker.test(input, expect, 496))
+
+    def test_497(self):
+        # NOTE: This case check for param compatiblity of Constructor
+        input = """
+                        Class A
+                        {
+                        }
+                        Class B:A
+                        {
+                            Var a: A = New B();
+                        }
+            """
+
+        expect = "Type Mismatch In Statement: VarDecl(Id(a),ClassType(Id(A)),NewExpr(Id(B),[]))"
+        self.assertTrue(TestChecker.test(input, expect, 497))
+
+    def test_498(self):
+        input = """
+                        Class Program{
+
+                            Val $someStatic : Int = 10;
+
+                            foo() {
+
+                                Var Program : Float = 1.0;
+
+                                Var x : Int = Program::$someStatic;
+
+                           }
+
+                        }
+            """
+
+        expect = "No Entry Point"
+        self.assertTrue(TestChecker.test(input, expect, 498))
+
+    def test_499(self):
+        input = """
+                Class A {
+                      Var foo: Int = 1;
+                      foo() {
+                      }
+                }
+            """
+
+        expect = "No Entry Point"
+        self.assertTrue(TestChecker.test(input, expect, 499))
+
+
 

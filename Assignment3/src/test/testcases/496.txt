@@ -4,6 +4,6 @@
                         }
                         Class B:A
                         {
-                            Var a: A = New B();
+                            Var a: A = New C();
                         }
             
