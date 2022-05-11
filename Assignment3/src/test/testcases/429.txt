@@ -1,16 +1,13 @@
 
-                        Class B{
-                            Var b:Int = 1;
-                            c(g:Int; h:Float){
-                                Return 1;
-                            }
-                            d(){}
+                    Class B{
+                        Val a:Int = 12;
+                        b(){Return 1.2;}
+                    }
+                    Class A{
+                        Var a: B = New B();
+                        a(){Return Self.a;}
+                        b(){
+                            Var class_name:B = New B();
+                            Val b:Int = Self.a().a;
                         }
-                        Class C{
-                            e(){
-                                Var a:B;
-                                Var d:Float = a.c(1,2);
-                                a.d();
-                                Var e:String = a.d();
-                            }
-                        }
+                    }

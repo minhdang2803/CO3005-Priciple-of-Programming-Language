@@ -1,1 +1,1 @@
-Illegal Member Access: FieldAccess(Id(A),Id(b))
+Type Mismatch In Statement: MethodDecl(Id(main),Static,[],Block([Return(IntLit(1))]))

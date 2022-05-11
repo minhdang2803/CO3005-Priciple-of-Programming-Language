@@ -1,1 +1,1 @@
-Undeclared Attribute: d
+Type Mismatch In Statement: VarDecl(Id(c),ClassType(Id(B)),NewExpr(Id(A),[]))

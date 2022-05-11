@@ -8,6 +8,6 @@
                         Var b:Int = 1;
                         Var c:B;
                         c.b = 1;
-                        c.c = 1;
+                        c.d = 2;
                     }
                     }

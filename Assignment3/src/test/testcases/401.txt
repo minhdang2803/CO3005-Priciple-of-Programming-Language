@@ -1,2 +1,2 @@
-Class a{}
-        Class a{}
+Class b{}
+        Class b{}

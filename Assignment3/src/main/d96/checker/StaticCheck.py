@@ -59,7 +59,7 @@ class Tree:
         self.current = self.head
         self.Self = None
         self.InLoof = False
-        self.has_constructor = False
+        self.in_func = None
 
     def redeclared_check(self, var_name, node):
         for n in node.block:
@@ -97,7 +97,7 @@ class Tree:
     def addMethod(self, name, kind, class_type=None):
         if self.redeclared_check_for_member(name, self.current, 'method'):
             kind = 'Static' if name == 'main' and self.current.name == "Program" else kind
-            mptype = class_type if name == 'Constructor' or name == 'Destructor' else VoidType()
+            mptype = class_type if ((name == 'Constructor' or name == 'Destructor') and self.current.tag == 'class') else VoidType()
             new_node = Node(name=name, kind=kind, block=[], parent=self.current, tag='method', typ=mptype)
             self.current.block.append(new_node)
             self.current = new_node
@@ -238,14 +238,20 @@ class StaticChecker(BaseVisitor):
         in_program = False
         if c.current.name == 'Program' and name == 'main':
             in_program = True
-        if c.addMethod(name, kind, c.current.name):
+        class_name = None
+        if name == 'Constructor' or name == 'Destructor':
+            if c.current.tag == 'class':
+                class_name = c.current.name
+        if c.addMethod(name, kind, class_name):
+            c.in_func = c.current
             for element in ast.param:
                 self.visit(element, (c, 'PARAM', 'id'))
+            c.in_func.param = [element.typ for element in c.current.block][:len(ast.param)]
             self.visit(ast.body, c)
-            c.current.param = [element.typ for element in c.current.block][:len(ast.param)]
             if in_program is True and len(c.current.param) == 0 and type(c.current.typ) is not VoidType:
                 raise TypeMismatchInStatement(ast)
             c.current = c.current.parent
+            c.in_func = None
         else:
             raise Redeclared(Method(), name)
 
@@ -304,8 +310,6 @@ class StaticChecker(BaseVisitor):
             raise IllegalConstantExpression(ast.value)
         if data is not None and type(typ) is not str:
             if not c[0].checkType(typ, data):
-                if c[1] == 'Attribute':
-                    raise TypeMismatchInStatement(ast)
                 raise TypeMismatchInConstant(ast)
         # Adding the identifier
         if c[1] == 'Attribute':
@@ -359,8 +363,6 @@ class StaticChecker(BaseVisitor):
         expr1, category_expr1 = self.visit(ast.expr1, c) if type(ast.expr1) is not Id else self.visit(ast.expr1,
                                                                                                       (c, None, 'id'))
         expr2, category_expr2 = self.visit(ast.expr2, c) if type(ast.expr2) is not Id else self.visit(ast.expr2,
-                                                                                                      (c, None, 'id'))
-        expr3, category_expr3 = self.visit(ast.expr3, c) if type(ast.expr3) is not Id else self.visit(ast.expr3,
                                                                                                       (c, None, 'id'))
         if category_scala == 'immutable':
             raise CannotAssignToConstant(ast)
@@ -551,7 +553,8 @@ class StaticChecker(BaseVisitor):
         if len(ast.param) > 0:
             node = c.searchMethod('Constructor', class_name.name, len(ast.param))
             if node is None:
-                raise Undeclared(Method(), 'Constructor')
+                # raise Undeclared(Method(), 'Constructor')
+                raise TypeMismatchInExpression(ast)
             if node.tag == 'method':
                 param = node.param
                 args = [self.visit(element, c)[0].typ for element in ast.param]
@@ -608,6 +611,8 @@ class StaticChecker(BaseVisitor):
         elif op in ['==', '!=']:
             if type(left) not in [BoolType, IntType] or type(right) not in [BoolType, IntType]:
                 raise TypeMismatchInExpression(ast)
+            elif type(left) is not type(right):
+                raise TypeMismatchInExpression(ast)
             return Node(typ=BoolType()), category
         elif op in ['<', '>', '<=', '>=']:
             if type(left) not in [FloatType, IntType] or type(right) not in [FloatType, IntType]:
@@ -662,11 +667,11 @@ class StaticChecker(BaseVisitor):
             node = c.searchId(ast.expr.name, c.current)
         else:
             return_val, category = (VoidType(), None) if ast.expr is None else self.visit(ast.expr, c)
-            return_val = return_val.typ
-        if c.current.tag == 'method':
-            c.current.typ = return_val
-            c.current.isConst = category
-        return (node, category)
+            return_val = return_val.typ if type(return_val) is Node else return_val
+        if c.in_func.tag == 'method':
+            c.in_func.typ = return_val
+            c.in_func.isConst = category
+        return node, category
 
     def visitIntLiteral(self, ast, c):
         return Node(data=ast.value, typ=IntType(), isConst='immutable'), 'immutable'

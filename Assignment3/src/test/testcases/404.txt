@@ -1,6 +1,6 @@
 Class a{
                     b(){
-                        Var a:Int;
-                        Var a:Int;
+                        Var e:Int;
+                        Var e:Int;
                     }
                     }

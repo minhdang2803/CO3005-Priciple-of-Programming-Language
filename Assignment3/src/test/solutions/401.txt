@@ -1,1 +1,1 @@
-Redeclared Class: a
+Redeclared Class: b

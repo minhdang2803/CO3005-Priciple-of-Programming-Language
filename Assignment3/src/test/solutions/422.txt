@@ -1,1 +1,1 @@
-Type Mismatch In Expression: BinaryOp(+.,BinaryOp(==.,StringLit(abc),StringLit(def)),StringLit(ghi))
+Cannot Assign To Constant: AssignStmt(Id(b),IntLit(3))

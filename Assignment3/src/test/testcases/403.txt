@@ -1,4 +1,4 @@
 Class a{
-    Var a:Int;
-    a(){}
-}
+                    d(a:Int; b:String){}
+                    d(){}
+                    }

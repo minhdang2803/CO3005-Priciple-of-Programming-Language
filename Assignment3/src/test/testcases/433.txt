@@ -1,6 +1,9 @@
 
-                        Class C{
-                            e(){
-                                Val a : Int = 1.2;
-                            }
-                        }
+                    Class B{
+                        Val a:Int = 12;
+                        b(){Return 1.2;}
+                        Constructor(a:Int; b:Int){}
+                    }
+                    Class A{
+                        Var c: B = New B(1,"Hello"); ## Error Here ##
+                    }

@@ -1,15 +1,11 @@
 
-                        Class B{
-                            Var b:Int = 1;
-                            c(g:Int; h:Float){
-                                Return 1;
-                            }
-                            d(){}
+                    Class B{
+                        Val a:Int = 12;
+                        b(){Return 1.2;}
+                        Constructor(a:Int; b:Int){
+                            Return 1;
                         }
-                        Class C{
-                            e(){
-                                Val a:B = New B();
-                                Val d:Float = a.c(1,2);
-                                Val e:String = a.d(1,2);
-                            }
-                        }
+                    }
+                    Class A{
+                        Var c: B = New B(1,"Hello"); ## Error Here ##
+                    }
