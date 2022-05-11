@@ -212,6 +212,7 @@ class StaticChecker(BaseVisitor):
             self.visit(decl, c)
         if not c.checkEntryPoint():
             raise NoEntryPoint()
+        return ""
 
     def visitClassDecl(self, ast, c):
         node_parent = None if ast.parentname is None else self.visit(ast.parentname, (c, 'INST', 'class'))[0].name
@@ -265,8 +266,6 @@ class StaticChecker(BaseVisitor):
             else:
                 if type(element) in [VarDecl, ConstDecl]:
                     self.visit(element, (c, 'INST', 'id'))
-                elif c.current.name == 'Constructor' and type(element) is Return and element.expr is not None:
-                    raise TypeMismatchInStatement(ast)
                 else:
                     self.visit(element, c)
         return
@@ -671,6 +670,10 @@ class StaticChecker(BaseVisitor):
         if c.in_func.tag == 'method':
             c.in_func.typ = return_val
             c.in_func.isConst = category
+        if c.in_func.name == 'main' and len(c.in_func.param) == 0 and c.in_func.parent.name == "Program":
+            raise TypeMismatchInStatement(ast)
+        if c.in_func.name == 'Constructor':
+            raise TypeMismatchInStatement(ast)
         return node, category
 
     def visitIntLiteral(self, ast, c):

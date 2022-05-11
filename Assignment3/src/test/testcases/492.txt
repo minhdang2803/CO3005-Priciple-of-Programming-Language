@@ -1,7 +1,7 @@
-     
-                        Class A {
-                        Val a:Int = 2;
-                           $fooExp1(){
-                                Self.a = "abc";
-                           }               
-                        }
+
+        Class Program {
+            main() {
+                Var arr: Array[Int,5] = Array(1,2,3,4);
+            }
+        }
+        

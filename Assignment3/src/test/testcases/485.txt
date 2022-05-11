@@ -1,7 +1,20 @@
-     
-                        Class A {
-                           $fooExp1(x:Float; y:String){
-                                Var a:Array[Int, 2] = Array(1,1);
-                                a = Array(1,1,1);
-                           }               
-                        }
+
+        Class Program {
+            main() {
+                Var i: Int;
+                Foreach (i In 1 .. 100) {
+                    Var j: Int;
+                    Foreach  (j In 1 .. 100) {
+                        Break;
+                        Continue;
+                    }
+                    If (True) { Break; }
+                    Elseif (False) { Continue; }
+                    Else { Continue; }
+                    {
+                        If (True) { Break; }
+                    }
+                }
+            }
+        }
+        

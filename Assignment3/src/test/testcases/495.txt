@@ -1,19 +1,16 @@
 
-                        Class Student
-                        {
-                            Var name: String;
-                            Var ID: Int;
-                            Constructor(newName: String; newID : Int)
-                            {
-                                Self.name = newName;
-                                Self.ID = newID;
-                            }
-                        }
-                        Class Program
-                        {
-                            main()
-                            {
-                                Var myStudent: Student = New Student ();
-                            }
-                        }
-            
+        Class B {
+            func() {}
+        }
+        Class A {
+            Var arr: Array[B,5];
+        }
+        Class class {
+            Var $a: A = New A();
+        }
+        Class Program {
+            main() {
+                class::$a.arr[1].func();
+            }
+        }
+        

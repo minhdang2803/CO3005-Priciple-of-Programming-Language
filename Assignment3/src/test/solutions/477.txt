@@ -1,1 +1,1 @@
-Undeclared Attribute: g
+Undeclared Class: A

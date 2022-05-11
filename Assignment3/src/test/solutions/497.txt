@@ -1,1 +1,1 @@
-Type Mismatch In Statement: VarDecl(Id(a),ClassType(Id(A)),NewExpr(Id(B),[]))
+Type Mismatch In Expression: NewExpr(Id(Node),[IntLit(5),NullLiteral()])

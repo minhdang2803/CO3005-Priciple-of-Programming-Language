@@ -1,14 +1,10 @@
-     
-                        Class A {
-                           Var a:Int = 1;                      
-                        }                        
-                        Class B{ 
-                            Var b:A = New A(); 
-                        }
-                        Class C{
-                            foo(){
-                                Var c:B = New B();
-                                Var e:Int = c.b.a;
-                                Var f:Int = c.b.g;
-                            }
-                        }
+
+        Class A {
+            $func(x:String) {Return 1;}
+            func(x:String) {Return 1;}
+        }
+        Class Program {
+            Var x, y: Int = A::$func(""), (New A()).func("");
+            main() {}
+        }
+        

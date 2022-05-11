@@ -1,11 +1,8 @@
-     
-                        Class E {
-                           func() {                        
-                           } 
-                           Constructor(a:Int){
-                           }                       
-                        }                        
-                        Class Test{                        
-                          Var e: E = New E(1);              
-                          Val b: String = New E(1);                                
-                        } 
+
+        Class Program {
+            Val A: Int = 1; ## This is a variable with name A, not class A ##
+            main() {
+                Var x: A = New A();
+            }
+        }
+        

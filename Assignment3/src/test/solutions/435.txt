@@ -1,1 +1,1 @@
-Type Mismatch In Statement: Block([Return(IntLit(1))])
+Type Mismatch In Expression: NewExpr(Id(B),[IntLit(1),StringLit(Hello)])

@@ -1,1 +1,1 @@
-Type Mismatch In Statement: MethodDecl(Id(main),Static,[],Block([Return(IntLit(1))]))
+Type Mismatch In Statement: Return(IntLit(1))

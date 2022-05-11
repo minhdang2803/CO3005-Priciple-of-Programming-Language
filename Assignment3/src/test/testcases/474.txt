@@ -1,14 +1,8 @@
-     
-                        Class E {
-                           $func() { 
-                                Return 1;                       
-                           } 
-                           Constructor(a:Int){
-                           }                       
-                        }                        
-                        Class Test{ 
-                            cak(){                     
-                                Var a:Int = E::$func();   
-                                Var b:Int = E::$foo();                             
-                            }
-                        }
+
+        Class Program {
+            Constructor(x:Int) {}
+            Var i: Int;
+            Var next: Program = New Program(1);
+            main() {}
+        }
+        

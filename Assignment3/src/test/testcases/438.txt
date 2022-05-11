@@ -2,7 +2,7 @@
                     Class B{
                         Val a:Int = 12;
                         b(){Return 1.2;}
-                        Constructor(a:Int; b:Int){Return;}
+                        Constructor(a:Int; b:Int){}
                     }
                     Class A{
                         Var c: B = New B(1,"Hello",3); ## Error Here ##

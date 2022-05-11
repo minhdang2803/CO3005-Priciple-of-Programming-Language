@@ -1,7 +1,8 @@
-     
-                        Class A {
-                           $fooExp1(){
-                                Val a: Array[Array[Int, 2],2] = Array(Array(1,1),Array(1,1));
-                                a[1] = Array(1,1);
-                           }               
-                        }
+
+        Class Program {
+            func() { Return 1; }
+            main() {
+                Var x: String = Self.func();
+            }
+        }
+        

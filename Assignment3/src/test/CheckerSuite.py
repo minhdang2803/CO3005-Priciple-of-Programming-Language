@@ -527,13 +527,12 @@ class CheckerSuite(unittest.TestCase):
                         Val a:Int = 12;
                         b(){Return 1.2;}
                         Constructor(a:Int; b:Int){
-                            Return 1;
                         }
                     }
                     Class A{
                         Var c: B = New B(1,"Hello"); ## Error Here ##
                     }"""
-        expect = "Type Mismatch In Statement: Block([Return(IntLit(1))])"
+        expect = "Type Mismatch In Expression: NewExpr(Id(B),[IntLit(1),StringLit(Hello)])"
         self.assertTrue(TestChecker.test(input, expect, 435))
 
     def test_436(self):
@@ -547,7 +546,7 @@ class CheckerSuite(unittest.TestCase):
                     Class A{
                         Var c: B = New B(1,"Hello"); ## Error Here ##
                     }"""
-        expect = "Type Mismatch In Statement: Block([Return(IntLit(1))])"
+        expect = "Type Mismatch In Statement: Return(IntLit(1))"
         self.assertTrue(TestChecker.test(input, expect, 436))
 
     def test_437(self):
@@ -556,7 +555,7 @@ class CheckerSuite(unittest.TestCase):
                     Class B{
                         Val a:Int = 12;
                         b(){Return 1.2;}
-                        Constructor(a:Int; b:Int){Return;}
+                        Constructor(a:Int; b:Int){}
                     }
                     Class A{
                         Var c: B = New B(1,"Hello"); ## Error Here ##
@@ -570,7 +569,7 @@ class CheckerSuite(unittest.TestCase):
                     Class B{
                         Val a:Int = 12;
                         b(){Return 1.2;}
-                        Constructor(a:Int; b:Int){Return;}
+                        Constructor(a:Int; b:Int){}
                     }
                     Class A{
                         Var c: B = New B(1,"Hello",3); ## Error Here ##
@@ -819,7 +818,7 @@ class CheckerSuite(unittest.TestCase):
                     }
                 }
             """
-        expect = "Type Mismatch In Statement: MethodDecl(Id(main),Static,[],Block([Return(IntLit(1))]))"
+        expect = "Type Mismatch In Statement: Return(IntLit(1))"
         self.assertTrue(TestChecker.test(input, expect, 455))
 
     def test_456(self):
