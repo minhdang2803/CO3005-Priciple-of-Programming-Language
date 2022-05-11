@@ -1,8 +1,5 @@
 import unittest
-
 from TestUtils import TestChecker
-
-
 class CheckerSuite(unittest.TestCase):
     def test_400(self):
         """ Test Redeclared Attribute """
