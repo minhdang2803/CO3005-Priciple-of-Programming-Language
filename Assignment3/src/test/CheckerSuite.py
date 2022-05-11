@@ -527,12 +527,13 @@ class CheckerSuite(unittest.TestCase):
                         Val a:Int = 12;
                         b(){Return 1.2;}
                         Constructor(a:Int; b:Int){
+                            Return 1;
                         }
                     }
                     Class A{
                         Var c: B = New B(1,"Hello"); ## Error Here ##
                     }"""
-        expect = "Type Mismatch In Expression: NewExpr(Id(B),[IntLit(1),StringLit(Hello)])"
+        expect = "Type Mismatch In Statement: Return(IntLit(1))"
         self.assertTrue(TestChecker.test(input, expect, 435))
 
     def test_436(self):
