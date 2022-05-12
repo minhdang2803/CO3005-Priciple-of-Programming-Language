@@ -435,8 +435,8 @@ class StaticChecker(BaseVisitor):
         if is_val == 'Const':
             if category == 'mutable':
                 raise IllegalConstantExpression(ast)
-        if c.in_func is not None:
-            if '$' in c.in_func.name:
+        if c.in_func is not None and is_self is not None:
+            if '$' in c.in_func.name or c.in_func.kind == "Static" or c.in_func.name == 'main':
                 raise IllegalMemberAccess(ast)
         # check Illegal Access Member
         if not c.checkIllegalAccess(obj, node, is_self):
@@ -479,8 +479,8 @@ class StaticChecker(BaseVisitor):
         # if member is method && member return type is Void => raise
         if node.tag == 'method' and type(node.typ) is not VoidType:
             raise TypeMismatchInStatement(ast)
-        if c.in_func is not None:
-            if '$' in c.in_func.name or c.in_func.kind == "Static":
+        if c.in_func is not None and is_self is not None:
+            if '$' in c.in_func.name or c.in_func.kind == "Static" or c.in_func.name == 'main':
                 raise IllegalMemberAccess(ast)
         # Check type of params and arguments
         if node.tag == 'method':
@@ -530,8 +530,8 @@ class StaticChecker(BaseVisitor):
         # if member is method && member return type is Void => raise
         if node.tag == 'method' and type(node.typ) is VoidType:
             raise TypeMismatchInExpression(ast)
-        if c.in_func is not None:
-            if '$' in c.in_func.name or c.in_func.kind == "Static":
+        if c.in_func is not None and is_self is not None:
+            if '$' in c.in_func.name or c.in_func.kind == "Static" or c.in_func.name == 'main':
                 raise IllegalMemberAccess(ast)
         if node.tag == 'method':
             param = node.param

@@ -2,7 +2,6 @@
         Class A{
             Val $B: Int = 10;
         }
-
         Class B{
             Val C: Int = A::$B;
             a(a : Int){
@@ -23,7 +22,7 @@
                 }
                 Else{
                     Return Self.a(a - 1) +. "Three";
-                } 
+                }
                 Return "Other";
             }
             fibonacci(a : Int){
@@ -44,9 +43,9 @@
             }
         }
         Class Program {
-            Val C: A = New A();
+            Var C: A = New A();
             main(){
-                Val b: Int = Self.C.B;
+                Val b: Int = Self.C;
             }
         }
         

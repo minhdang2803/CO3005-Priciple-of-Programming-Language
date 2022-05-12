@@ -10,7 +10,7 @@
                     Return Array("a");
                 }
                 Else{
-                    Return Array("b");    
+                    Return Array("b");
                 }
             }
             func1(){

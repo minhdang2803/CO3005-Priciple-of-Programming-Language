@@ -763,7 +763,7 @@ class CheckerSuite(unittest.TestCase):
         """Simple program: int main() {} """
         input = """
                         Class A {
-                        Val a:Int = 2;
+                        Var a:Int = 2;
                            $fooExp1(){
                                 Self.a = "abc";
                            }
@@ -1109,13 +1109,12 @@ class CheckerSuite(unittest.TestCase):
         '''
         expect = "Type Mismatch In Constant Declaration: ConstDecl(Id(C),ArrayType(2,IntType),[IntLit(1),IntLit(2),FieldAccess(Id(A),Id($B))])"
         self.assertTrue(TestChecker.test(input, expect, 481))
-
+    #
     def test_482(self):
         input = """
         Class A{
             Val $B: Int = 10;
         }
-
         Class B{
             Val C: Int = A::$B;
             a(a : Int){
@@ -1136,7 +1135,7 @@ class CheckerSuite(unittest.TestCase):
                 }
                 Else{
                     Return Self.a(a - 1) +. "Three";
-                } 
+                }
                 Return "Other";
             }
             fibonacci(a : Int){
@@ -1157,13 +1156,13 @@ class CheckerSuite(unittest.TestCase):
             }
         }
         Class Program {
-            Val C: A = New A();
+            Var C: A = New A();
             main(){
-                Val b: Int = Self.C.B;
+                Val b: Int = Self.C;
             }
         }
         """
-        expect = "Undeclared Attribute: B"
+        expect = "Illegal Member Access: FieldAccess(Self(),Id(C))"
         self.assertTrue(TestChecker.test(input, expect, 482))
 
     def test_483(self):
@@ -1179,7 +1178,7 @@ class CheckerSuite(unittest.TestCase):
                     Return Array("a");
                 }
                 Else{
-                    Return Array("b");    
+                    Return Array("b");
                 }
             }
             func1(){
@@ -1209,7 +1208,7 @@ class CheckerSuite(unittest.TestCase):
         input = '''
         Class A{
             Var a1, a2, a3: String;
-            Var $s: Int = 0; 
+            Var $s: Int = 0;
             Constructor(a, b, c : String){
                 A::$s = A::$s + 1;
                 Self.a1 = a;
@@ -1300,7 +1299,7 @@ class CheckerSuite(unittest.TestCase):
             sickle(s: String; e: Int){
                 Var i: Int;
                 Foreach(i In 1 .. 10 By 2){
-                   Break; 
+                   Break;
                 }
                 Return;
             }
@@ -1434,17 +1433,3 @@ class CheckerSuite(unittest.TestCase):
         """
         expect = "Undeclared Identifier: count"
         self.assertTrue(TestChecker.test(input, expect, 500))
-
-    def test_501(self):
-        """Simple program: int main() {} """
-        input = """
-                        Class A {
-                           $fooExp1(){
-                                Var a: Array[Array[Int, 2],2] = Array(Array(1,1),Array(1,1));
-                                a[1] = Array(1,1);
-                                a[1][1] = 1;
-                                a = 1;
-                           }
-                        }"""
-        expect = "Type Mismatch In Statement: AssignStmt(Id(a),IntLit(1))"
-        self.assertTrue(TestChecker.test(input, expect, 501))

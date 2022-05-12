@@ -1,6 +1,6 @@
 
                         Class A {
-                        Val a:Int = 2;
+                        Var a:Int = 2;
                            $fooExp1(){
                                 Self.a = "abc";
                            }

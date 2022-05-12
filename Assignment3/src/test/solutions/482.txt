@@ -1,1 +1,1 @@
-Undeclared Attribute: B
+Illegal Member Access: FieldAccess(Self(),Id(C))
