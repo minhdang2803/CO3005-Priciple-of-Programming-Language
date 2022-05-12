@@ -1,1 +1,1 @@
-Type Mismatch In Expression: CallExpr(BooleanLit(True),Id(func),[])
+Cannot Assign To Constant: AssignStmt(Id(a),IntLit(1))

@@ -1,10 +1,13 @@
 
         Class A {
-            $func(x:String) {Return 1;}
-            func(x:String) {Return 1;}
+            Var b: Array[Int, 1] = Array(True);
+
+            Var d,e: Int;
+            Val f: Array[Array[Int,1], 2] = Array( Array(d), Array(e));
         }
-        Class Program {
-            Var x, y: Int = A::$func(""), (New A()).func("");
-            main() {}
+        Class Program{
+            main(){
+                Return;
+            }
         }
         

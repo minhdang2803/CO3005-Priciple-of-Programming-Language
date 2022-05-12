@@ -1,16 +1,9 @@
 
-        Class B {
-            func() {}
-        }
-        Class A {
-            Var arr: Array[B,5];
-        }
-        Class class {
-            Var $a: A = New A();
-        }
-        Class Program {
-            main() {
-                Var x: A = class::$a.arr[1].func();
-            }
-        }
-        
+                        Class A
+                        {
+                        }
+                        Class B:A
+                        {
+                            Var a: A = New C();
+                        }
+            

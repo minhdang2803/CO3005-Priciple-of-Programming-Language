@@ -1,9 +1,10 @@
 
-        Class A {
-            Var $arr: Array[Int,3];
-        }
-        Class Program {
-            Var x: Array[Int,4] = A::$arr;
-            main() {}
-        }
+            Class A {
+                Var a: Int;
+                Val b: Int = 1;
+                c()
+                {
+                    Val c: Int = Self.b - 1;
+                }
+            }
         

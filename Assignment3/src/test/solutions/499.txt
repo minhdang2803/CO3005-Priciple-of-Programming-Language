@@ -1,1 +1,1 @@
-Undeclared Attribute: $x
+Type Mismatch In Statement: VarDecl(Id(a),IntType,FloatLit(2.2))

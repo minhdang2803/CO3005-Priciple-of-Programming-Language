@@ -1,8 +1,10 @@
 
-        Class Program {
-            func() {}
-            main() {
-                Self.func();
+        Class A{
+            Val a, d: Int = 1, 2;
+        }
+        Class Program{
+            main(){
+
             }
         }
-        
+            

@@ -36,6 +36,12 @@ class ExpUtils:
     def isNotAccess(expType):
         return type(expType) not in [CallExpr, FieldAccess, CallStmt]
 
+    @staticmethod
+    def validConstAssign(category, is_val):
+        if category == "mutable" and is_val == "Const":
+            return False
+        return True
+
 
 # Author of this structure: Le Thien An senpoi 🥺
 class Node:
@@ -97,7 +103,8 @@ class Tree:
     def addMethod(self, name, kind, class_type=None):
         if self.redeclared_check_for_member(name, self.current, 'method'):
             kind = 'Static' if name == 'main' and self.current.name == "Program" else kind
-            mptype = class_type if ((name == 'Constructor' or name == 'Destructor') and self.current.tag == 'class') else VoidType()
+            mptype = class_type if (
+                        (name == 'Constructor' or name == 'Destructor') and self.current.tag == 'class') else VoidType()
             new_node = Node(name=name, kind=kind, block=[], parent=self.current, tag='method', typ=mptype)
             self.current.block.append(new_node)
             self.current = new_node
@@ -135,9 +142,7 @@ class Tree:
         if node is not None:
             for element in node.block:
                 if element.name == name and element.tag == 'attr':
-                    return element
-            if node.inherit:
-                return self.searchAttr(name, node.inherit)
+                    return element  # if node.inherit:  #     return self.searchAttr(name, node.inherit)
         return None
 
     def searchMethod(self, name, class_name, size=None):
@@ -145,15 +150,11 @@ class Tree:
         if size is not None and node is not None:
             for element in node.block:
                 if element.name == name and element.tag == 'method' and len(element.param) == size:
-                    return element
-                if node.inherit:
-                    return self.searchMethod(name, node.inherit, size)
+                    return element  # if node.inherit:  #     return self.searchMethod(name, node.inherit, size)
         if size is None and node is not None:
             for element in node.block:
                 if element.name == name and element.tag == 'method':
-                    return element
-            if node.inherit:
-                return self.searchMethod(name, node.inherit, size)
+                    return element  # if node.inherit:  #     return self.searchMethod(name, node.inherit, size)
         return None
 
     def checkType(self, type_decl, type_assign):
@@ -249,8 +250,6 @@ class StaticChecker(BaseVisitor):
                 self.visit(element, (c, 'PARAM', 'id'))
             c.in_func.param = [element.typ for element in c.current.block][:len(ast.param)]
             self.visit(ast.body, c)
-            if in_program is True and len(c.current.param) == 0 and type(c.current.typ) is not VoidType:
-                raise TypeMismatchInStatement(ast)
             c.current = c.current.parent
             c.in_func = None
         else:
@@ -300,13 +299,14 @@ class StaticChecker(BaseVisitor):
         kind = 'Static' if '$' in name else 'Instance'
         typ = self.visit(ast.constType, c)[0].typ
         node_data = category = None
-        if type(ast.value) is FieldAccess:
+        if type(ast.value) in [FieldAccess, CallExpr, CallStmt, BinaryOp, UnaryOp]:
             node_data, category = self.visit(ast.value, (c[0], 'Const')) if ast.value is not None else (None, None)
         else:
             node_data, category = self.visit(ast.value, c) if ast.value is not None else (None, None)
         data = node_data.typ if node_data is not None else node_data
-        if data is None or category == 'mutable' or ExpUtils.isNotConst(ast.value):
-            raise IllegalConstantExpression(ast.value)
+        if data is None or category == 'mutable':#or ExpUtils.isNotConst(ast.value)
+            if type(ast.value) is not NewExpr:
+                raise IllegalConstantExpression(ast.value)
         if data is not None and type(typ) is not str:
             if not c[0].checkType(typ, data):
                 raise TypeMismatchInConstant(ast)
@@ -355,7 +355,7 @@ class StaticChecker(BaseVisitor):
             c.current = c.current.parent
         return
 
-    def visitFor(self, ast, c):
+    def visitFor(self, ast:For, c):
         c = c[0] if type(c) is tuple else c
         scala, category_scala = self.visit(ast.id, (c, None, 'id'))
         scala = scala.typ
@@ -364,7 +364,7 @@ class StaticChecker(BaseVisitor):
         expr2, category_expr2 = self.visit(ast.expr2, c) if type(ast.expr2) is not Id else self.visit(ast.expr2,
                                                                                                       (c, None, 'id'))
         if category_scala == 'immutable':
-            raise CannotAssignToConstant(ast)
+            raise CannotAssignToConstant(Assign(ast.id, ast.expr1))
         if type(expr1.typ) is not IntType or type(expr2.typ) is not IntType or type(scala) is not IntType:
             raise TypeMismatchInStatement(ast)
         c.InLoof = True
@@ -406,20 +406,17 @@ class StaticChecker(BaseVisitor):
         # c = c[0] if type(c) is tuple else c
         obj = is_self = category = None
         if type(ast.obj) is Id:
-            is_id = c.searchId(ast.obj.name, c.current)
-            is_class = c.searchClass(ast.obj.name)
-            if is_id is None and is_class is None:
-                if '$' not in ast.fieldname.name:
-                    raise Undeclared(Identifier(), ast.obj.name)
-                else:
-                    raise Undeclared(Class(), ast.obj.name)
-            elif is_id is None:
-                obj = is_class
-            elif is_class is None:
-                obj = is_id
+            if '$' in ast.fieldname.name:
+                obj, category = self.visit(ast.obj, (c, None, 'class'))
             else:
-                if '$' in ast.fieldname.name:
+                is_id = c.searchId(ast.obj.name, c.current)
+                is_class = c.searchClass(ast.obj.name)
+                if is_id is None and is_class is None:
+                    raise Undeclared(Identifier(), ast.obj.name)
+                elif is_id is None:
                     obj = is_class
+                elif is_class is None:
+                    obj = is_id
                 else:
                     obj = is_id
         elif type(ast.obj) is SelfLiteral:
@@ -438,28 +435,31 @@ class StaticChecker(BaseVisitor):
         if is_val == 'Const':
             if category == 'mutable':
                 raise IllegalConstantExpression(ast)
+        if c.in_func is not None:
+            if '$' in c.in_func.name:
+                raise IllegalMemberAccess(ast)
         # check Illegal Access Member
         if not c.checkIllegalAccess(obj, node, is_self):
             raise IllegalMemberAccess(ast)
         return node, node.isConst
 
     def visitCallStmt(self, ast, c):
-        obj = is_self = category = None
+        is_val = obj = is_self = category = None
+        if type(c) is tuple:
+            is_val = c[1]
+            c = c[0]
         if type(ast.obj) is Id:
-            is_id = c.searchId(ast.obj.name, c.current)
-            is_class = c.searchClass(ast.obj.name)
-            if is_id is None and is_class is None:
-                if '$' not in ast.method.name:
-                    raise Undeclared(Identifier(), ast.obj.name)
-                else:
-                    raise Undeclared(Class(), ast.obj.name)
-            elif is_id is None:
-                obj = is_class
-            elif is_class is None:
-                obj = is_id
+            if '$' in ast.method.name:
+                obj, category = self.visit(ast.obj, (c, None, 'class'))
             else:
-                if '$' in ast.method.name:
+                is_id = c.searchId(ast.obj.name, c.current)
+                is_class = c.searchClass(ast.obj.name)
+                if is_id is None and is_class is None:
+                    raise Undeclared(Identifier(), ast.obj.name)
+                elif is_id is None:
                     obj = is_class
+                elif is_class is None:
+                    obj = is_id
                 else:
                     obj = is_id
         elif type(ast.obj) is SelfLiteral:
@@ -479,6 +479,12 @@ class StaticChecker(BaseVisitor):
         # if member is method && member return type is Void => raise
         if node.tag == 'method' and type(node.typ) is not VoidType:
             raise TypeMismatchInStatement(ast)
+        if c.in_func is not None:
+            if '$' in c.in_func.name or c.in_func.kind == "Static":
+                raise IllegalMemberAccess(ast)
+        # if is_val == 'Const':
+        #     if category == 'mutable' or node.isConst == 'mutable':
+        #         raise IllegalConstantExpression(ast)
         # Check type of params and arguments
         if node.tag == 'method':
             param = node.param
@@ -492,23 +498,22 @@ class StaticChecker(BaseVisitor):
         return node, None
 
     def visitCallExpr(self, ast, c):
-        c = c[0] if type(c) is tuple else c
-        obj = is_self = category = None
+        is_val = obj = is_self = category = None
+        if type(c) is tuple:
+            is_val = c[1]
+            c = c[0]
         if type(ast.obj) is Id:
-            is_id = c.searchId(ast.obj.name, c.current)
-            is_class = c.searchClass(ast.obj.name)
-            if is_id is None and is_class is None:
-                if '$' not in ast.method.name:
-                    raise Undeclared(Identifier(), ast.obj.name)
-                else:
-                    raise Undeclared(Class(), ast.obj.name)
-            elif is_id is None:
-                obj = is_class
-            elif is_class is None:
-                obj = is_id
+            if '$' in ast.method.name:
+                obj, category = self.visit(ast.obj, (c, None, 'class'))
             else:
-                if '$' in ast.method.name:
+                is_id = c.searchId(ast.obj.name, c.current)
+                is_class = c.searchClass(ast.obj.name)
+                if is_id is None and is_class is None:
+                    raise Undeclared(Identifier(), ast.obj.name)
+                elif is_id is None:
                     obj = is_class
+                elif is_class is None:
+                    obj = is_id
                 else:
                     obj = is_id
         elif type(ast.obj) is SelfLiteral:
@@ -528,10 +533,21 @@ class StaticChecker(BaseVisitor):
         # if member is method && member return type is Void => raise
         if node.tag == 'method' and type(node.typ) is VoidType:
             raise TypeMismatchInExpression(ast)
+        if c.in_func is not None:
+            if '$' in c.in_func.name or c.in_func.kind == "Static":
+                raise IllegalMemberAccess(ast)
+        # if is_val == 'Const':
+        #     if category == 'mutable' or node.isConst == 'mutable':
+        #         raise IllegalConstantExpression(ast)
         # check type of params and arguments
         if node.tag == 'method':
             param = node.param
-            args = [self.visit(element, c)[0].typ for element in ast.param]
+            args = []
+            for element in ast.param:
+                if type(element) is Id:
+                    args += [self.visit(element,(c,None,'id'))[0].typ]
+                else:
+                    args += [self.visit(element, c)[0].typ]
             if len(param) < len(args):
                 raise TypeMismatchInExpression(ast)
             for index in range(len(param)):
@@ -545,8 +561,8 @@ class StaticChecker(BaseVisitor):
         node = None
         if len(ast.param) == 0:
             node = c.searchMethod('Constructor', class_name.name)
-            if node is None:
-                return Node(typ=class_name.name), 'immutable'
+            if node is None or len(node.param) == 0:
+                return Node(typ=class_name.name), 'mutable'
             if len(node.param) > 0:
                 raise TypeMismatchInExpression(ast)
         if len(ast.param) > 0:
@@ -565,11 +581,21 @@ class StaticChecker(BaseVisitor):
             return node, node.isConst
 
     def visitBinaryOp(self, ast: BinaryOp, c):
-        c = c[0] if type(c) is tuple else c
-        category = None
-        right, category_right = self.visit(ast.right, (c, None, 'id')) if type(ast.right) is Id else self.visit(
-            ast.right, c)
-        left, category_left = self.visit(ast.left, (c, None, 'id')) if type(ast.left) is Id else self.visit(ast.left, c)
+        is_val = None
+        if type(c) is tuple:
+            is_val = c[1]
+            c = c[0]
+        category = category_right = category_left = None
+        if is_val == "Const":
+            right, category_right = self.visit(ast.right, (c, None, 'id')) if type(ast.right) is Id else self.visit(
+                ast.right, (c, 'Const'))
+            left, category_left = self.visit(ast.left, (c, None, 'id')) if type(ast.left) is Id else self.visit(
+                ast.left, (c, 'Const'))
+        else:
+            right, category_right = self.visit(ast.right, (c, None, 'id')) if type(ast.right) is Id else self.visit(
+                ast.right, c)
+            left, category_left = self.visit(ast.left, (c, None, 'id')) if type(ast.left) is Id else self.visit(
+                ast.left, c)
         if category_left is None and category_right is not None:
             category = category_right
         if category_right is None and category_left is not None:
@@ -578,81 +604,101 @@ class StaticChecker(BaseVisitor):
             category = None
         if category_left == category_right:
             category = category_left
-        if category_right == 'mutable':
-            if category_left == 'immutable':
-                category = 'mutable'
-        if category_right == 'immutable':
-            if category_left == 'mutable':
-                category = 'mutable'
+        if category_left == 'mutable' or category_right == 'mutable':
+            category = 'mutable'
         op = ast.op
         right = right.typ
         left = left.typ
+        ret_node = (None, None)
         if op in ['+', '-', '*', '/']:
             if type(left) not in [IntType, FloatType] or type(right) not in [IntType, FloatType]:
                 raise TypeMismatchInExpression(ast)
             if type(left) is IntType and type(right) is IntType:
-                return Node(typ=IntType()), category
-            return Node(typ=FloatType()), category
+                ret_node = Node(typ=IntType()), category
+            else:
+                ret_node = Node(typ=FloatType()), category
         elif op == '%':
             if type(left) is IntType and type(right) is IntType:
-                return Node(typ=IntType()), category
-            raise TypeMismatchInExpression(ast)
+                ret_node = Node(typ=IntType()), category
+            else:
+                raise TypeMismatchInExpression(ast)
         elif op in ['&&', '||']:
             if type(left) is BoolType and type(right) is BoolType:
-                return Node(typ=BoolType()), category
-            raise TypeMismatchInExpression(ast)
+                ret_node = Node(typ=BoolType()), category
+            else:
+                raise TypeMismatchInExpression(ast)
         elif op in ['==.', '+.']:
             if type(left) is not StringType or type(right) is not StringType:
                 raise TypeMismatchInExpression(ast)
             if op == '==.':
-                return Node(typ=BoolType()), category
-            return Node(typ=StringType()), category
+                ret_node = Node(typ=BoolType()), category
+            else:
+                ret_node = Node(typ=StringType()), category
         elif op in ['==', '!=']:
             if type(left) not in [BoolType, IntType] or type(right) not in [BoolType, IntType]:
                 raise TypeMismatchInExpression(ast)
             elif type(left) is not type(right):
                 raise TypeMismatchInExpression(ast)
-            return Node(typ=BoolType()), category
+            ret_node = Node(typ=BoolType()), category
         elif op in ['<', '>', '<=', '>=']:
             if type(left) not in [FloatType, IntType] or type(right) not in [FloatType, IntType]:
                 raise TypeMismatchInExpression(ast)
-            return Node(typ=BoolType()), category
+            ret_node = Node(typ=BoolType()), category
+        if category == "mutable" and is_val == "Const":
+            raise IllegalConstantExpression(ast)
+        return ret_node
 
     def visitUnaryOp(self, ast: UnaryOp, c):
-        c = c[0] if type(c) is tuple else c
-        expr, category = self.visit(ast.body, (c, None, 'id')) if type(ast.body) is Id else self.visit(ast.body, c)
+        is_val = None
+        if type(c) is tuple:
+            is_val = c[1]
+            c = c[0]
+        if is_val == "Const":
+            expr, category = self.visit(ast.body, (c, None, 'id')) if type(ast.body) is Id else self.visit(ast.body, (c,"Const"))
+        else:
+            expr, category = self.visit(ast.body, (c, None, 'id')) if type(ast.body) is Id else self.visit(ast.body, c)
         expr = expr.typ
         op = ast.op
+        ret_node = None
         if op == '-':
             if type(expr) not in [IntType, FloatType]:
                 raise TypeMismatchInExpression(ast)
-            return (Node(typ=IntType()), category) if type(expr) is IntType else (Node(typ=FloatType()), category)
+            ret_node= (Node(typ=IntType()), category) if type(expr) is IntType else (Node(typ=FloatType()), category)
         if op in '!':
             if type(expr) is not BoolType:
                 raise TypeMismatchInExpression(ast)
-            return Node(typ=BoolType()), category
+            ret_node = (Node(typ=BoolType()), category)
+        if category == "mutable" and is_val == "Const":
+            raise IllegalConstantExpression(ast)
+        return ret_node
 
     def visitArrayCell(self, ast, c):
         # array is a variable: ex a[5]
+        c = c[0] if type(c) is tuple else c
         node_array, category = self.visit(ast.arr, (c, None, 'id'))
-        idx_type = [self.visit(element, c)[0].typ for element in ast.idx]
+        idx_type = []
+        for element in ast.idx:
+            if type(element) is Id:
+                idx_type += [self.visit(element, (c, None, 'id'))[0].typ]
+            else:
+                idx_type = [self.visit(element, c)[0].typ]
         check = arr_type = node_array.typ
-        #Check type of id
+        # Check type of id
         if type(arr_type) is not ArrayType:
             raise TypeMismatchInExpression(ast)
-        #Check Dimension
+        # Check Dimension
         number_dim = 1
         while type(check.eleType) is ArrayType:
             number_dim = number_dim + 1
             check = check.eleType
         if number_dim < len(ast.idx):
             raise TypeMismatchInExpression(ast)
-        #check type of Index
+        # check type of Index
         for element in idx_type:
             if type(element) is not IntType:
                 raise TypeMismatchInExpression(ast)
         target_element, target_category = self.visit(arr_type.eleType, c)
-        length = range(len(ast.idx)-1)
+        length = range(len(ast.idx) - 1)
         for element in length:
             if type(target_element.typ) is ArrayType:
                 target_element, target_category = self.visit(target_element.typ.eleType, c)
@@ -671,8 +717,12 @@ class StaticChecker(BaseVisitor):
             c.in_func.typ = return_val
             c.in_func.isConst = category
         if c.in_func.name == 'main' and len(c.in_func.param) == 0 and c.in_func.parent.name == "Program":
-            raise TypeMismatchInStatement(ast)
+            if ast.expr is not None:
+                raise TypeMismatchInStatement(ast)
         if c.in_func.name == 'Constructor':
+            if ast.expr is not None:
+                raise TypeMismatchInStatement(ast)
+        if c.in_func.name == "Destructor":
             raise TypeMismatchInStatement(ast)
         return node, category
 
@@ -719,7 +769,7 @@ class StaticChecker(BaseVisitor):
         return Node(typ=ArrayType(len(ast.value), temp.typ)), None
 
     def visitStringLiteral(self, ast, c):
-        return Node(data=ast.value, typ=StringType()), None
+        return Node(data=ast.value, typ=StringType(), isConst='immutable'), 'immutable'
 
     def visitIntType(self, ast, c):
         return Node(typ=IntType()), None

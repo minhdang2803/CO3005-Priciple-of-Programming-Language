@@ -1,8 +1,7 @@
 
-        Class Program {
-            func() { Return 1; }
-            main() {
-                Var x: String = Self.func();
+            Class Triangle {
+                main(){
+                    Var Triangle : String;
+                }
             }
-        }
         

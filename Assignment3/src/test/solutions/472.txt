@@ -1,1 +1,1 @@
-Undeclared Class: A
+Type Mismatch In Statement: Return(IntLit(1))

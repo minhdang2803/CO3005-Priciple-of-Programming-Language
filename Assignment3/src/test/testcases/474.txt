@@ -1,8 +1,14 @@
 
-        Class Program {
-            Constructor(x:Int) {}
-            Var i: Int;
-            Var next: Program = New Program(1);
-            main() {}
+        Class A {
+            Var a: Array[Int, 1] = Array(1, 2, 3, 4);
+            Var b: Array[Int, 1] = Array(True);
+
+            Var d,e: Int;
+            Val f: Array[Array[Int,1], 2] = Array( Array(d), Array(e) );
+        }
+        Class Program{
+            main(){
+                Return;
+            }
         }
         

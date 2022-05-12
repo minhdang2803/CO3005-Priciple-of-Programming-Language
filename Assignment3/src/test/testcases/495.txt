@@ -1,16 +1,11 @@
 
-        Class B {
-            func() {}
-        }
-        Class A {
-            Var arr: Array[B,5];
-        }
-        Class class {
-            Var $a: A = New A();
-        }
-        Class Program {
-            main() {
-                class::$a.arr[1].func();
+            Class A {
+                Var a: Int;
+                Val b: Int = 1;
+                c()
+                {
+                    Val c: Int = Self.b - 1;
+                    Val d: Int = Self.a - 1;
+                }
             }
-        }
         

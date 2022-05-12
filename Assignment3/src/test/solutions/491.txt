@@ -1,1 +1,1 @@
-Type Mismatch In Statement: VarDecl(Id(x),StringType,CallExpr(Self(),Id(func),[]))
+No Entry Point

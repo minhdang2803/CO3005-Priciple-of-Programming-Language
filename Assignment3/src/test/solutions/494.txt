@@ -1,1 +1,1 @@
-Type Mismatch In Statement: VarDecl(Id(x),ArrayType(4,IntType),FieldAccess(Id(A),Id($arr)))
+No Entry Point
