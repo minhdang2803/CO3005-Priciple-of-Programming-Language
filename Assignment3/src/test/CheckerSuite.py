@@ -1,6 +1,10 @@
 import unittest
+
 from TestUtils import TestChecker
+
+
 class CheckerSuite(unittest.TestCase):
+
     def test_400(self):
         """ Test Redeclared Attribute """
         input = """
@@ -732,7 +736,7 @@ class CheckerSuite(unittest.TestCase):
         expect = "Type Mismatch In Statement: VarDecl(Id(b),ArrayType(2,ArrayType(2,IntType)),[[StringLit(a),StringLit(a)],[StringLit(a),StringLit(abc)]])"
         self.assertTrue(TestChecker.test(input, expect, 449))
 
-    def test_449(self):
+    def test_450(self):
         """Simple program: int main() {} """
         input = """
                         Class A {
@@ -741,20 +745,6 @@ class CheckerSuite(unittest.TestCase):
                            }
                         }"""
         expect = "Illegal Array Literal: [[IntLit(1),IntLit(1)],[IntLit(1),IntLit(1),StringLit(a)]]"
-        self.assertTrue(TestChecker.test(input, expect, 449))
-
-    def test_450(self):
-        """Simple program: int main() {} """
-        input = """
-                        Class A {
-                           $fooExp1(){
-                                Var a: Array[Array[Int, 2],2] = Array(Array(1,1),Array(1,1));
-                                a[1] = Array(1,1);
-                                a[1][1] = 1;
-                                a = 1;
-                           }
-                        }"""
-        expect = "Type Mismatch In Statement: AssignStmt(Id(a),IntLit(1))"
         self.assertTrue(TestChecker.test(input, expect, 450))
 
     def test_451(self):
@@ -1167,7 +1157,7 @@ class CheckerSuite(unittest.TestCase):
             }
         }
         Class Program {
-            Var C: A = New A();
+            Val C: A = New A();
             main(){
                 Val b: Int = Self.C.B;
             }
@@ -1445,3 +1435,17 @@ class CheckerSuite(unittest.TestCase):
         """
         expect = "Undeclared Identifier: count"
         self.assertTrue(TestChecker.test(input, expect, 500))
+
+    def test_501(self):
+        """Simple program: int main() {} """
+        input = """
+                        Class A {
+                           $fooExp1(){
+                                Var a: Array[Array[Int, 2],2] = Array(Array(1,1),Array(1,1));
+                                a[1] = Array(1,1);
+                                a[1][1] = 1;
+                                a = 1;
+                           }
+                        }"""
+        expect = "Type Mismatch In Statement: AssignStmt(Id(a),IntLit(1))"
+        self.assertTrue(TestChecker.test(input, expect, 501))
