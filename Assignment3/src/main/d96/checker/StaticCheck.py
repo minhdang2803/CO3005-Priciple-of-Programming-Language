@@ -304,7 +304,7 @@ class StaticChecker(BaseVisitor):
         else:
             node_data, category = self.visit(ast.value, c) if ast.value is not None else (None, None)
         data = node_data.typ if node_data is not None else node_data
-        if data is None or category == 'mutable':#or ExpUtils.isNotConst(ast.value)
+        if data is None or category == 'mutable':
             if type(ast.value) is not NewExpr:
                 raise IllegalConstantExpression(ast.value)
         if data is not None and type(typ) is not str:
@@ -482,9 +482,6 @@ class StaticChecker(BaseVisitor):
         if c.in_func is not None:
             if '$' in c.in_func.name or c.in_func.kind == "Static":
                 raise IllegalMemberAccess(ast)
-        # if is_val == 'Const':
-        #     if category == 'mutable' or node.isConst == 'mutable':
-        #         raise IllegalConstantExpression(ast)
         # Check type of params and arguments
         if node.tag == 'method':
             param = node.param
@@ -536,10 +533,6 @@ class StaticChecker(BaseVisitor):
         if c.in_func is not None:
             if '$' in c.in_func.name or c.in_func.kind == "Static":
                 raise IllegalMemberAccess(ast)
-        # if is_val == 'Const':
-        #     if category == 'mutable' or node.isConst == 'mutable':
-        #         raise IllegalConstantExpression(ast)
-        # check type of params and arguments
         if node.tag == 'method':
             param = node.param
             args = []
@@ -719,11 +712,9 @@ class StaticChecker(BaseVisitor):
         if c.in_func.name == 'main' and len(c.in_func.param) == 0 and c.in_func.parent.name == "Program":
             if ast.expr is not None:
                 raise TypeMismatchInStatement(ast)
-        if c.in_func.name == 'Constructor':
+        if c.in_func.name == 'Constructor' or c.in_func.name == "Destructor":
             if ast.expr is not None:
                 raise TypeMismatchInStatement(ast)
-        if c.in_func.name == "Destructor":
-            raise TypeMismatchInStatement(ast)
         return node, category
 
     def visitIntLiteral(self, ast, c):
