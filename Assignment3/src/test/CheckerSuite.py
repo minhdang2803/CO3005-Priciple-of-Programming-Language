@@ -1272,12 +1272,11 @@ class CheckerSuite(unittest.TestCase):
             Val a, d: Int = 1, 2;
         }
         Class Program{
-            main(){
-
+            main(a:Int){
             }
         }
-            """
-        expect = "[]"
+        """
+        expect = "No Entry Point"
         self.assertTrue(TestChecker.test(input, expect, 487))
 
     def test_488(self):

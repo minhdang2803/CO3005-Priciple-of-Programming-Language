@@ -3,8 +3,7 @@
             Val a, d: Int = 1, 2;
         }
         Class Program{
-            main(){
-
+            main(a:Int){
             }
         }
-            
+        
