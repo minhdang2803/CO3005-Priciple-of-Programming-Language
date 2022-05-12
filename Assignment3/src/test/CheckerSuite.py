@@ -1197,7 +1197,6 @@ class CheckerSuite(unittest.TestCase):
         Class Program {
             Var C: A = New A();
             main(){
-                Val b: Int = Self.C.B;
             }
         }
         '''
