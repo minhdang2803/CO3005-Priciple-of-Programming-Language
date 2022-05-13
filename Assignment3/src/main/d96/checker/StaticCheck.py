@@ -4,6 +4,7 @@
 from StaticError import *
 # from Utils import Utils
 from Visitor import *
+from AST import *
 
 
 # from src.main.d96.utils.Visitor import BaseVisitor
@@ -299,7 +300,7 @@ class StaticChecker(BaseVisitor):
         kind = 'Static' if '$' in name else 'Instance'
         typ = self.visit(ast.constType, c)[0].typ
         node_data = category = None
-        if type(ast.value) in [FieldAccess, CallExpr, CallStmt, BinaryOp, UnaryOp]:
+        if type(ast.value) in [FieldAccess, CallExpr, CallStmt, BinaryOp, UnaryOp, ArrayCell]:
             node_data, category = self.visit(ast.value, (c[0], 'Const')) if ast.value is not None else (None, None)
         else:
             node_data, category = self.visit(ast.value, c) if ast.value is not None else (None, None)
@@ -432,15 +433,15 @@ class StaticChecker(BaseVisitor):
         if node is None:
             raise Undeclared(Attribute(), ast.fieldname.name)
         # check if immutable for Constdecl:
-        if is_val == 'Const':
-            if category == 'mutable':
-                raise IllegalConstantExpression(ast)
         if c.in_func is not None and is_self is not None:
             if '$' in c.in_func.name or c.in_func.kind == "Static" or c.in_func.name == 'main':
                 raise IllegalMemberAccess(ast)
         # check Illegal Access Member
         if not c.checkIllegalAccess(obj, node, is_self):
             raise IllegalMemberAccess(ast)
+        if is_val == 'Const':
+            if category == 'mutable' or node.isConst == 'mutable':
+                return node, 'mutable'
         return node, node.isConst
 
     def visitCallStmt(self, ast, c):
@@ -546,6 +547,9 @@ class StaticChecker(BaseVisitor):
             for index in range(len(param)):
                 if not c.checkType(param[index], args[index]):
                     raise TypeMismatchInExpression(ast)
+        if is_val == 'Const':
+            if category == 'mutable' or node.isConst == 'mutable':
+                return node, 'mutable'
         return node, node.isConst
 
     def visitNewExpr(self, ast, c):
@@ -667,14 +671,24 @@ class StaticChecker(BaseVisitor):
 
     def visitArrayCell(self, ast, c):
         # array is a variable: ex a[5]
-        c = c[0] if type(c) is tuple else c
+        # c = c[0] if type(c) is tuple else c
+        is_const = category_array_cell = None
+        if type(c) is tuple:
+            is_const = c[1]
+            c = c[0]
+
         node_array, category = self.visit(ast.arr, (c, None, 'id'))
         idx_type = []
         for element in ast.idx:
             if type(element) is Id:
                 idx_type += [self.visit(element, (c, None, 'id'))[0].typ]
             else:
-                idx_type = [self.visit(element, c)[0].typ]
+                if is_const == 'Const':
+                    get_type, category_array_cell = self.visit(element, (c, "Const"))
+                    idx_type += [get_type.typ]
+                    category_array_cell = None if type(element) is IntType else category_array_cell
+                else:
+                    idx_type += [self.visit(element, c)[0].typ]
         check = arr_type = node_array.typ
         # Check type of id
         if type(arr_type) is not ArrayType:
@@ -695,6 +709,9 @@ class StaticChecker(BaseVisitor):
         for element in length:
             if type(target_element.typ) is ArrayType:
                 target_element, target_category = self.visit(target_element.typ.eleType, c)
+        if category_array_cell is not None:
+            if category_array_cell == 'mutable':
+                category = 'mutable'
         return target_element, category
 
     def visitReturn(self, ast, c):
